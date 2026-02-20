@@ -1,0 +1,2734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PianoNaija 🎹 - Learn Piano the Fun Way!</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --c1: #FF4757; --c2: #FFA502; --c3: #2ED573; --c4: #1E90FF;
+  --c5: #A855F7; --c6: #FF6B81; --gold: #FFD700;
+  --bg: #0D0B1E; --panel: #161330; --panel2: #1F1B3A;
+  --white: #FFFFFF;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: var(--bg);
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── ANIMATED BG ── */
+.bg-orbs {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15;
+  animation: orbDrift 8s ease-in-out infinite alternate;
+}
+.orb1 { width:400px;height:400px; background:#FF4757; top:-100px;left:-100px; animation-duration:9s; }
+.orb2 { width:350px;height:350px; background:#A855F7; bottom:-80px;right:-80px; animation-duration:11s; }
+.orb3 { width:300px;height:300px; background:#2ED573; top:40%;left:40%; animation-duration:7s; }
+.orb4 { width:250px;height:250px; background:#1E90FF; top:20%;right:10%; animation-duration:13s; }
+@keyframes orbDrift {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(40px, 30px) scale(1.1); }
+}
+
+/* ── HEADER ── */
+header {
+  position: relative; z-index: 10; text-align: center;
+  padding: 24px 20px 0;
+}
+.logo {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(2.8rem, 9vw, 5.5rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #FF4757, #FFA502, #FFD700, #2ED573, #1E90FF);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: logoShimmer 4s linear infinite, logoFloat 3s ease-in-out infinite;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+@keyframes logoShimmer { to { background-position: 300% center; } }
+@keyframes logoFloat {
+  0%,100% { transform: translateY(0) rotate(-0.5deg); }
+  50%      { transform: translateY(-8px) rotate(0.5deg); }
+}
+.logo-sub {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* ── MASCOT ── */
+.mascot-row {
+  position: relative; z-index: 10;
+  display: flex; justify-content: center; align-items: center;
+  padding: 16px 20px 8px; gap: 16px;
+}
+.mascot-wrap {
+  position: relative; cursor: pointer;
+}
+.mascot-body {
+  font-size: 5.5rem;
+  display: block;
+  animation: mascotWiggle 2s ease-in-out infinite;
+  filter: drop-shadow(0 8px 30px rgba(255,215,0,0.5));
+  transition: transform 0.2s;
+  user-select: none;
+}
+.mascot-body:hover { transform: scale(1.15); }
+@keyframes mascotWiggle {
+  0%,100% { transform: rotate(-5deg) translateY(0); }
+  25%      { transform: rotate(5deg) translateY(-12px); }
+  75%      { transform: rotate(-3deg) translateY(-6px); }
+}
+.bubble {
+  background: white;
+  color: #1a1a2e;
+  border-radius: 18px 18px 18px 4px;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  max-width: 220px;
+  line-height: 1.5;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  position: relative;
+  animation: bubbleIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.bubble::before {
+  content:''; position:absolute; left:-10px; bottom:16px;
+  border:6px solid transparent; border-right-color:white;
+}
+@keyframes bubbleIn {
+  from { transform: scale(0.5) translateX(-20px); opacity: 0; }
+  to   { transform: scale(1) translateX(0); opacity: 1; }
+}
+
+/* ── SCORE BAR ── */
+.score-bar {
+  position: relative; z-index: 10;
+  display: flex; justify-content: center; gap: 20px;
+  padding: 6px 20px 10px;
+  flex-wrap: wrap;
+}
+.score-chip {
+  background: var(--panel);
+  border-radius: 40px;
+  padding: 8px 20px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem;
+  border: 2px solid rgba(255,215,0,0.2);
+  display: flex; align-items: center; gap: 8px;
+}
+.score-chip .val { color: var(--gold); font-size: 1.2rem; }
+
+/* ── TABS ── */
+.tabs {
+  position: relative; z-index: 10;
+  display: flex; justify-content: center;
+  gap: 8px; padding: 8px 20px 16px;
+  flex-wrap: wrap;
+}
+.tab {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.95rem;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+  background: var(--panel2);
+  color: rgba(255,255,255,0.6);
+  font-weight: 700;
+}
+.tab:hover, .tab.on {
+  transform: translateY(-4px) scale(1.05);
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+.tab.on.t0 { background: linear-gradient(135deg,#FF4757,#FF6B81); border-color:#FF4757; }
+.tab.on.t1 { background: linear-gradient(135deg,#FFA502,#FFD700); border-color:#FFA502; color:#1a1a00; }
+.tab.on.t2 { background: linear-gradient(135deg,#2ED573,#00C853); border-color:#2ED573; color:#001a00; }
+.tab.on.t3 { background: linear-gradient(135deg,#1E90FF,#A855F7); border-color:#1E90FF; }
+
+/* ── SECTIONS ── */
+.sect { display: none; position: relative; z-index: 10; padding: 10px 16px 40px; }
+.sect.on { display: block; }
+
+/* ── PIANO ── */
+.piano-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+
+/* Song picker */
+.song-picker {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  max-width: 700px;
+}
+.sp-btn {
+  font-family: 'Baloo 2', cursive;
+  padding: 9px 18px; border-radius: 40px;
+  border: 2px solid rgba(255,255,255,0.1);
+  background: var(--panel2);
+  color: rgba(255,255,255,0.7);
+  cursor: pointer; font-size: 0.88rem;
+  transition: all 0.3s;
+}
+.sp-btn:hover, .sp-btn.on {
+  border-color: var(--gold);
+  color: white;
+  background: linear-gradient(135deg, rgba(255,165,0,0.25), rgba(255,69,87,0.25));
+  transform: translateY(-2px) scale(1.04);
+}
+
+/* 3D Piano stage */
+.piano-stage {
+  perspective: 1000px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.piano-3d {
+  transform-style: preserve-3d;
+  transform: rotateX(22deg) rotateY(0deg);
+  transition: transform 0.3s;
+  animation: pianoRock 6s ease-in-out infinite;
+}
+@keyframes pianoRock {
+  0%,100% { transform: rotateX(22deg) rotateY(-1deg); }
+  50%      { transform: rotateX(18deg) rotateY(1deg); }
+}
+.piano-case {
+  background: linear-gradient(160deg, #3d1800 0%, #1a0900 40%, #0d0500 100%);
+  border-radius: 18px 18px 6px 6px;
+  padding: 18px 22px 32px;
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.9),
+    0 0 0 4px #7a3000,
+    0 0 0 6px #3d1800,
+    inset 0 2px 6px rgba(255,180,60,0.25),
+    inset 0 -4px 10px rgba(0,0,0,0.5);
+  position: relative;
+}
+.piano-case::before {
+  content:'';
+  position:absolute; top:0;left:0;right:0;height:6px;
+  background: linear-gradient(90deg, transparent, rgba(255,180,60,0.4), transparent);
+  border-radius: 18px 18px 0 0;
+}
+.piano-brand {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  color: rgba(255,180,60,0.4);
+  text-align: center;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.keys-row {
+  display: flex;
+  position: relative;
+  height: 170px;
+  gap: 4px;
+}
+
+/* White keys */
+.wk {
+  width: 56px;
+  height: 160px;
+  background: linear-gradient(180deg, #FEFEFE 0%, #EDE5D5 55%, #DDD0B8 100%);
+  border-radius: 0 0 12px 12px;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid #C8BFAA;
+  box-shadow:
+    0 10px 0 #B0A090,
+    0 12px 25px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.08s, box-shadow 0.08s, background 0.08s;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  padding-bottom: 12px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.wk::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.04));
+  border-radius: 0 0 12px 12px;
+}
+.wk .klabel {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #555;
+  pointer-events: none;
+  position: relative; z-index: 1;
+}
+.wk .kemoji {
+  font-size: 1.1rem;
+  pointer-events: none;
+  position: relative; z-index: 1;
+  margin-bottom: 2px;
+}
+.wk:active, .wk.lit {
+  transform: rotateX(6deg);
+  box-shadow: 0 4px 0 #B0A090, 0 5px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+/* Color flash per note */
+.wk.lit.n0 { background: linear-gradient(180deg,#FF6B6B,#FF4757); }
+.wk.lit.n1 { background: linear-gradient(180deg,#FFB347,#FFA502); }
+.wk.lit.n2 { background: linear-gradient(180deg,#FFE040,#FFD700); }
+.wk.lit.n3 { background: linear-gradient(180deg,#69F0AE,#2ED573); }
+.wk.lit.n4 { background: linear-gradient(180deg,#4FC3F7,#1E90FF); }
+.wk.lit.n5 { background: linear-gradient(180deg,#CE93D8,#A855F7); }
+.wk.lit.n6 { background: linear-gradient(180deg,#FF80AB,#FF4FA3); }
+.wk.lit.n7 { background: linear-gradient(180deg,#FF6B6B,#FF4757); }
+
+/* Black keys */
+.bk {
+  width: 36px;
+  height: 105px;
+  background: linear-gradient(180deg, #333 0%, #111 50%, #000 100%);
+  border-radius: 0 0 8px 8px;
+  cursor: pointer;
+  position: absolute;
+  z-index: 3;
+  box-shadow:
+    0 8px 0 #000,
+    0 10px 20px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 1px 0 0 rgba(255,255,255,0.05);
+  transition: transform 0.08s, box-shadow 0.08s, background 0.08s;
+  transform-origin: top center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.bk:active, .bk.lit {
+  transform: rotateX(6deg);
+  box-shadow: 0 3px 0 #000, 0 4px 10px rgba(0,0,0,0.7);
+  background: linear-gradient(180deg, #FF6B00 0%, #CC4400 100%);
+}
+/* Glow ring on press */
+.key-glow {
+  position: absolute; top:50%; left:50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: 4px solid rgba(255,215,0,0.8);
+  animation: glowRing 0.6s ease-out forwards;
+  pointer-events: none; z-index: 10;
+}
+@keyframes glowRing {
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(3); opacity: 0; }
+}
+
+/* ── SHEET / SONG PLAYER ── */
+.sheet {
+  width: 100%; max-width: 680px;
+  background: var(--panel);
+  border-radius: 20px;
+  padding: 18px;
+  border: 2px solid rgba(255,215,0,0.15);
+}
+.sheet-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.3rem;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 12px;
+}
+.lyric-line {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  margin-bottom: 14px;
+  font-style: italic;
+  min-height: 1.4em;
+}
+.note-track {
+  display: flex; flex-wrap: wrap;
+  gap: 7px; justify-content: center;
+  padding: 6px 0;
+}
+.nt {
+  padding: 8px 14px;
+  border-radius: 30px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: 3px solid transparent;
+  user-select: none;
+}
+.nt:hover { transform: scale(1.12); }
+.nt.cur  { animation: ntPop 0.35s cubic-bezier(0.175,0.885,0.32,1.275); border-color: white; box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+.nt.done { opacity: 0.35; }
+@keyframes ntPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.35) rotate(-3deg); }
+  100% { transform: scale(1); }
+}
+/* Note colors */
+.nC,.nC5 { background:#FF4757; color:#fff; }
+.nD { background:#FFA502; color:#fff; }
+.nE { background:#FFD700; color:#222; }
+.nF { background:#2ED573; color:#fff; }
+.nG { background:#1E90FF; color:#fff; }
+.nA { background:#A855F7; color:#fff; }
+.nB { background:#FF4FA3; color:#fff; }
+.nCs,.nDs,.nFs,.nGs,.nAs { background:#888; color:#fff; }
+.nR { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+
+.play-btns {
+  display: flex; gap: 10px; justify-content: center;
+  margin-top: 14px; flex-wrap: wrap;
+}
+.pb {
+  font-family: 'Baloo 2', cursive;
+  padding: 11px 22px; border-radius: 50px;
+  border: none; cursor: pointer; font-size: 0.95rem;
+  font-weight: 800; transition: all 0.3s;
+}
+.pb:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+.pb.pplay { background: linear-gradient(135deg,#2ED573,#00C853); color:#001a00; }
+.pb.pslow { background: linear-gradient(135deg,#A855F7,#7B2FBE); color:#fff; }
+.pb.pstop { background: linear-gradient(135deg,#FF4757,#CC0022); color:#fff; }
+.pb.preset { background: linear-gradient(135deg,#FFA502,#FF6B00); color:#fff; }
+
+/* ── ACTIVITIES ── */
+.act-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px; max-width: 900px; margin: 0 auto;
+}
+.act-card {
+  background: var(--panel);
+  border-radius: 20px; padding: 22px;
+  border: 2px solid rgba(255,255,255,0.06);
+  cursor: pointer; transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.act-card::before {
+  content:''; position:absolute; top:0;left:0;right:0;height:4px;
+  background: var(--ac, var(--gold));
+}
+.act-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(255,215,0,0.3);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+.act-icon2 { font-size: 2.8rem; margin-bottom: 10px; display: block; }
+.act-name { font-family: 'Baloo 2', cursive; font-size: 1.15rem; color: var(--gold); margin-bottom: 6px; }
+.act-desc2 { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+.act-tag { font-family:'Baloo 2',cursive; font-size:0.75rem; color: var(--gold); margin-top: 10px; display:block; }
+
+/* ── ACTIVITY MODAL / GAME OVERLAY ── */
+.game-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,8,28,0.97);
+  z-index: 200;
+  display: none; flex-direction: column;
+  align-items: center; justify-content: flex-start;
+  padding: 20px;
+  overflow-y: auto;
+}
+.game-overlay.on { display: flex; }
+.game-close {
+  position: absolute; top: 14px; right: 14px;
+  font-size: 2rem; cursor: pointer;
+  background: var(--panel2); border: none; color: white;
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s;
+}
+.game-close:hover { transform: scale(1.2) rotate(90deg); }
+.game-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
+  text-align: center;
+  background: linear-gradient(135deg, var(--gold), #FF4757);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px; margin-top: 30px;
+}
+.game-instr {
+  color: rgba(255,255,255,0.7); text-align:center;
+  font-size: 1rem; margin-bottom: 20px;
+  max-width: 500px; line-height: 1.6;
+}
+
+/* ── FREEZE GAME ── */
+.freeze-arena {
+  width: 100%; max-width: 500px;
+  background: var(--panel); border-radius: 24px;
+  padding: 24px; text-align: center;
+}
+.freeze-dancer {
+  font-size: 8rem;
+  display: block;
+  animation: dance 0.4s ease-in-out infinite alternate;
+  margin: 10px 0;
+}
+@keyframes dance {
+  from { transform: rotate(-10deg) translateY(0); }
+  to   { transform: rotate(10deg) translateY(-15px); }
+}
+.freeze-dancer.frozen {
+  animation: none !important;
+  transform: rotate(-15deg);
+  filter: hue-rotate(200deg) brightness(0.7);
+}
+.freeze-status {
+  font-family: 'Baloo 2', cursive;
+  font-size: 2rem; color: var(--gold);
+  margin: 10px 0;
+}
+.freeze-btn {
+  font-family: 'Baloo 2', cursive;
+  padding: 14px 36px; border-radius: 50px;
+  border: none; cursor: pointer; font-size: 1.1rem;
+  font-weight: 800; transition: all 0.3s;
+  background: linear-gradient(135deg, #FF4757, #FF6B81);
+  color: white; margin-top: 12px;
+}
+.freeze-btn:hover { transform: scale(1.05); }
+
+/* ── COLOUR MATCH ── */
+.cmatch-arena { width:100%; max-width:500px; text-align:center; }
+.cmatch-prompt {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.2rem; color: white; margin-bottom: 8px;
+}
+.cmatch-color-card {
+  width: 140px; height: 140px; border-radius: 24px;
+  margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  animation: cardPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes cardPop {
+  from { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.cmatch-piano { perspective: 600px; display: flex; justify-content: center; }
+.cmatch-piano-3d {
+  transform: rotateX(15deg);
+  background: #1a0900;
+  border-radius: 12px;
+  padding: 12px 14px 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 0 3px #7a3000;
+}
+.cmatch-keys { display: flex; gap: 3px; position: relative; height: 120px; }
+.ck-w {
+  width: 44px; height: 110px;
+  border-radius: 0 0 8px 8px;
+  cursor: pointer;
+  border: 1px solid #C8BFAA;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 8px;
+  font-size: 0.85rem; font-family: 'Baloo 2', cursive; font-weight: 800; color: #555;
+  box-shadow: 0 6px 0 #B0A090, 0 8px 15px rgba(0,0,0,0.4);
+  transition: all 0.1s; transform-origin: top center;
+  user-select: none;
+}
+.ck-w:active, .ck-w.correct { transform: rotateX(5deg); box-shadow: 0 2px 0 #B0A090; }
+.cmatch-fb {
+  font-family: 'Baloo 2', cursive;
+  font-size: 2rem; min-height: 2.5rem;
+  margin: 10px 0; animation: fbPop 0.4s ease;
+}
+@keyframes fbPop { from{transform:scale(2); opacity:0;} to{transform:scale(1); opacity:1;} }
+.cmatch-score { font-family:'Baloo 2',cursive; font-size:1.1rem; color:var(--gold); }
+
+/* ── ECHO GAME ── */
+.echo-arena { width:100%; max-width:560px; text-align:center; }
+
+/* Mode selector pills */
+.echo-mode-row {
+  display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;
+}
+.echo-mode-btn {
+  font-family: 'Baloo 2', cursive; font-size: 0.9rem; font-weight: 800;
+  padding: 9px 20px; border-radius: 40px; border: 3px solid transparent;
+  cursor: pointer; transition: all 0.3s; background: var(--panel2); color: rgba(255,255,255,0.5);
+}
+.echo-mode-btn:hover { color: white; transform: translateY(-2px); }
+.echo-mode-btn.sel-easy   { background: linear-gradient(135deg,#2ED573,#00C853); border-color:#2ED573; color:#001; }
+.echo-mode-btn.sel-medium { background: linear-gradient(135deg,#FFA502,#FFD700); border-color:#FFA502; color:#1a0; }
+.echo-mode-btn.sel-hard   { background: linear-gradient(135deg,#FF4757,#A855F7); border-color:#FF4757; color:#fff; }
+
+/* Mode badge shown during play */
+.echo-mode-badge {
+  display: inline-block;
+  font-family: 'Baloo 2', cursive; font-size: 0.8rem; font-weight: 800;
+  padding: 4px 14px; border-radius: 20px; margin-bottom: 8px; letter-spacing: 1px;
+}
+.badge-easy   { background: rgba(46,213,115,0.2); color: #2ED573; border: 1px solid #2ED573; }
+.badge-medium { background: rgba(255,165,2,0.2);  color: #FFA502; border: 1px solid #FFA502; }
+.badge-hard   { background: rgba(255,71,87,0.2);  color: #FF4757; border: 1px solid #FF4757; }
+
+.echo-sequence {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  margin: 10px 0; min-height: 58px; align-items: center;
+}
+.echo-note-dot {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 800;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4); transition: transform 0.2s;
+}
+.echo-note-dot.flash { animation: dotFlash 0.4s ease; }
+@keyframes dotFlash { 0%,100%{transform:scale(1);} 50%{transform:scale(1.5) rotate(10deg);} }
+
+/* Easy: coloured button pads */
+.echo-keys { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+.ek {
+  width: 62px; height: 62px; border-radius: 16px;
+  border: none; cursor: pointer; font-family: 'Baloo 2', cursive;
+  font-size: 1rem; font-weight: 800; transition: all 0.15s;
+  box-shadow: 0 6px 0 rgba(0,0,0,0.35);
+}
+.ek:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+
+/* Medium: same pads but label hidden — show only colour dot */
+.ek-med {
+  width: 62px; height: 62px; border-radius: 50%;
+  border: none; cursor: pointer; transition: all 0.15s;
+  box-shadow: 0 6px 0 rgba(0,0,0,0.35);
+}
+.ek-med:active { transform: translateY(4px) scale(0.92); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+
+/* Hard: full piano, no labels */
+.echo-hard-stage { perspective: 700px; display: flex; justify-content: center; margin-top: 14px; }
+.echo-hard-case {
+  transform: rotateX(18deg);
+  background: linear-gradient(160deg,#3d1800,#0d0500);
+  border-radius: 14px 14px 4px 4px;
+  padding: 14px 16px 24px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 0 4px #7a3000, inset 0 2px 4px rgba(255,180,60,0.2);
+}
+.echo-hard-keys { display: flex; gap: 4px; position: relative; height: 150px; }
+/* White key — NO label, NO emoji */
+.hk-w {
+  width: 50px; height: 140px;
+  background: linear-gradient(180deg, #FEFEFE 0%, #EDE5D5 55%, #DDD0B8 100%);
+  border-radius: 0 0 10px 10px;
+  cursor: pointer; border: 1px solid #C8BFAA;
+  box-shadow: 0 8px 0 #B0A090, 0 10px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,1);
+  transition: all 0.08s; transform-origin: top center; transform-style: preserve-3d;
+  user-select: none; -webkit-user-select: none;
+}
+.hk-w:active, .hk-w.hlit {
+  transform: rotateX(6deg);
+  box-shadow: 0 3px 0 #B0A090, 0 4px 10px rgba(0,0,0,0.4);
+  background: linear-gradient(180deg,#FFD700,#FFC000);
+}
+/* Black key — NO label */
+.hk-b {
+  width: 32px; height: 92px;
+  background: linear-gradient(180deg,#333,#000);
+  border-radius: 0 0 7px 7px; cursor: pointer;
+  position: absolute; z-index: 3;
+  box-shadow: 0 7px 0 #000, 0 9px 18px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.12);
+  transition: all 0.08s; transform-origin: top center;
+  user-select: none; -webkit-user-select: none;
+}
+.hk-b:active, .hk-b.hlit {
+  transform: rotateX(6deg);
+  box-shadow: 0 3px 0 #000, 0 4px 8px rgba(0,0,0,0.7);
+  background: linear-gradient(180deg,#FF6B00,#CC4400);
+}
+
+.echo-status {
+  font-family:'Baloo 2',cursive; font-size:1.15rem;
+  color:var(--gold); margin:10px 0; min-height:1.5rem;
+}
+.echo-start {
+  font-family:'Baloo 2',cursive; padding:12px 28px; border-radius:50px;
+  border:none; cursor:pointer; font-size:1rem; font-weight:800;
+  background: linear-gradient(135deg,#1E90FF,#A855F7); color:white;
+  transition: all 0.3s; margin-top:10px;
+}
+.echo-start:hover { transform:scale(1.06); box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+.echo-replay {
+  font-family:'Baloo 2',cursive; padding:8px 20px; border-radius:40px;
+  border: 2px solid rgba(255,255,255,0.2); background: transparent; color:rgba(255,255,255,0.6);
+  cursor:pointer; font-size:0.85rem; margin-top:6px; transition: all 0.2s;
+}
+.echo-replay:hover { border-color:var(--gold); color:var(--gold); }
+
+/* ── HIGH LOW ── */
+.highlow-arena { width:100%; max-width:500px; text-align:center; }
+.hl-note-vis {
+  font-size: 5rem; margin: 10px 0;
+  display: block;
+  animation: hlFloat 1s ease-in-out infinite alternate;
+}
+@keyframes hlFloat { from{transform:translateY(-20px);} to{transform:translateY(20px);} }
+.hl-btns { display:flex; gap:16px; justify-content:center; margin:16px 0; flex-wrap:wrap; }
+.hl-btn {
+  font-family:'Baloo 2',cursive; padding:16px 36px; border-radius:50px;
+  border:none; cursor:pointer; font-size:1.1rem; font-weight:800;
+  transition: all 0.2s;
+}
+.hl-btn:hover { transform:scale(1.08); }
+.hl-high { background:linear-gradient(135deg,#FF4757,#FF6B81); color:white; }
+.hl-low  { background:linear-gradient(135deg,#1E90FF,#A855F7); color:white; }
+.hl-feedback {
+  font-family:'Baloo 2',cursive; font-size:2.5rem;
+  min-height:3rem; margin:8px 0;
+  animation: fbPop 0.4s ease;
+}
+.hl-score { font-family:'Baloo 2',cursive; font-size:1rem; color:var(--gold); }
+.hl-piano-mini { perspective:400px; display:flex; justify-content:center; margin:10px 0; }
+
+/* ── BADGES ── */
+.badge-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px,1fr));
+  gap: 12px; max-width: 700px; margin: 0 auto 30px;
+}
+.badge-item {
+  background: var(--panel); border-radius: 18px;
+  padding: 18px 12px; text-align: center;
+  border: 2px solid rgba(255,255,255,0.05);
+  transition: all 0.3s;
+}
+.badge-item.earned {
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(255,215,0,0.2);
+}
+.badge-item.locked { opacity: 0.4; filter: grayscale(0.8); }
+.badge-item:hover { transform: scale(1.06); }
+.bi-icon { font-size: 2.8rem; display:block; margin-bottom:8px; }
+.bi-name { font-family:'Baloo 2',cursive; font-size:0.8rem; color:white; }
+.prog-wrap {
+  max-width: 400px; margin: 0 auto 20px;
+  background: rgba(255,255,255,0.08); border-radius:20px; height:18px; overflow:hidden;
+}
+.prog-fill {
+  height:100%; border-radius:20px;
+  background: linear-gradient(90deg, #2ED573, #FFD700, #FF4757);
+  transition: width 1.2s cubic-bezier(0.23,1,0.32,1);
+}
+
+/* ── FLOATING NOTES ── */
+.fnote {
+  position: fixed; pointer-events:none;
+  font-size: 2rem; z-index:1000;
+  animation: fnUp 1.6s ease-out forwards;
+}
+@keyframes fnUp {
+  from { opacity:1; transform:translateY(0) rotate(0) scale(1); }
+  to   { opacity:0; transform:translateY(-220px) rotate(25deg) scale(1.6); }
+}
+
+/* ── BANNER ── */
+.top-banner {
+  position:fixed; top:16px; left:50%;
+  transform: translateX(-50%) translateY(-120px);
+  background: linear-gradient(135deg,#FFD700,#FF4757);
+  color:#1a0000; font-family:'Baloo 2',cursive; font-size:1.2rem;
+  padding:14px 28px; border-radius:20px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);
+  transition: transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+  z-index:500; white-space:nowrap;
+}
+.top-banner.show { transform:translateX(-50%) translateY(0); }
+
+/* ── CONFETTI ── */
+.conf {
+  position:fixed; pointer-events:none; z-index:9999;
+  animation: confFall 2.5s linear forwards;
+  border-radius: 3px;
+}
+@keyframes confFall {
+  from{transform:translateY(-20px) rotate(0); opacity:1;}
+  to  {transform:translateY(110vh) rotate(900deg); opacity:0;}
+}
+
+/* ── SECTION TITLE ── */
+.sec-title {
+  font-family:'Baloo 2',cursive;
+  font-size:clamp(1.6rem,5vw,2.4rem);
+  text-align:center; margin-bottom:18px;
+  background:linear-gradient(135deg,var(--gold),#FF4757);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .wk { width:40px; height:140px; }
+  .bk { width:26px; height:88px; }
+  .wk .klabel { font-size:0.7rem; }
+  .wk .kemoji { font-size:0.85rem; }
+  .piano-case { padding:12px 14px 24px; }
+}
+@media(max-width:420px){
+  .wk { width:34px; }
+  .bk { width:22px; }
+}
+
+.hint-bar {
+  font-size:0.8rem; color:rgba(255,255,255,0.4);
+  text-align:center; padding:6px;
+}
+
+/* ══ LESSON SYSTEM CSS ══ */
+.level-road { display:flex;flex-direction:column;gap:12px;max-width:680px;margin:0 auto;padding:0 4px; }
+.level-block { background:var(--panel);border-radius:20px;border:2px solid rgba(255,255,255,0.06);overflow:hidden;transition:all 0.3s; }
+.level-block.unlocked { border-color:rgba(255,215,0,0.25); }
+.level-block.locked   { opacity:0.55; }
+.level-header { display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none; }
+.level-badge  { width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,0.4); }
+.level-info   { flex:1;min-width:0; }
+.level-title  { font-family:'Baloo 2',cursive;font-size:1.05rem;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+.level-meta   { font-size:0.78rem;color:rgba(255,255,255,0.45);margin-top:2px; }
+.level-arrow  { font-size:1.2rem;color:rgba(255,255,255,0.3);transition:transform 0.3s;flex-shrink:0; }
+.level-block.open .level-arrow { transform:rotate(90deg); }
+.level-prog   { height:4px;background:rgba(255,255,255,0.07);margin:0 20px 14px;border-radius:4px;overflow:hidden; }
+.level-prog-fill { height:100%;border-radius:4px;transition:width 0.8s ease; }
+.lesson-list  { display:none;flex-direction:column;gap:6px;padding:0 14px 14px; }
+.level-block.open .lesson-list { display:flex; }
+.lesson-row   { display:flex;align-items:center;gap:12px;background:var(--panel2);border-radius:14px;padding:12px 16px;cursor:pointer;border:2px solid transparent;transition:all 0.25s; }
+.lesson-row:hover { border-color:rgba(255,215,0,0.3);transform:translateX(4px); }
+.lesson-row.done  { border-color:rgba(46,213,115,0.3); }
+.lesson-row.locked-lesson { opacity:0.4;cursor:not-allowed; }
+.lesson-row.locked-lesson:hover { transform:none;border-color:transparent; }
+.lesson-dot   { width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem; }
+.lesson-row-info  { flex:1; }
+.lesson-row-title { font-family:'Baloo 2',cursive;font-size:0.95rem;color:white; }
+.lesson-row-sub   { font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:1px; }
+.lesson-status    { font-size:1.1rem; }
+
+/* Lesson full-screen overlay */
+.lesson-overlay { position:fixed;inset:0;background:var(--bg);z-index:300;display:none;flex-direction:column;overflow-y:auto; }
+.lesson-overlay.on { display:flex; }
+.lesson-topbar { display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--panel);border-bottom:2px solid rgba(255,255,255,0.06);position:sticky;top:0;z-index:10;flex-shrink:0; }
+.lesson-back { font-family:'Baloo 2',cursive;padding:8px 18px;border-radius:40px;border:2px solid rgba(255,255,255,0.15);background:transparent;color:white;cursor:pointer;font-size:0.9rem;transition:all 0.2s; }
+.lesson-back:hover { border-color:var(--gold);color:var(--gold); }
+.lesson-topbar-title { font-family:'Baloo 2',cursive;font-size:1.1rem;color:var(--gold);flex:1;text-align:center; }
+.lesson-step-ind { font-family:'Baloo 2',cursive;font-size:0.85rem;color:rgba(255,255,255,0.4); }
+.lesson-content { flex:1;padding:20px;max-width:680px;margin:0 auto;width:100%; }
+.step-card { background:var(--panel);border-radius:22px;padding:24px;margin-bottom:16px;border:2px solid rgba(255,255,255,0.06);animation:stepIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+@keyframes stepIn { from{transform:translateY(30px) scale(0.97);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
+.step-type-badge { display:inline-block;font-family:'Baloo 2',cursive;font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:12px; }
+.badge-explain { background:rgba(30,144,255,0.2);color:#1E90FF;border:1px solid #1E90FF; }
+.badge-try     { background:rgba(46,213,115,0.2);color:#2ED573;border:1px solid #2ED573; }
+.badge-quiz    { background:rgba(168,85,247,0.2);color:#A855F7;border:1px solid #A855F7; }
+.step-heading  { font-family:'Baloo 2',cursive;font-size:1.45rem;color:white;margin-bottom:10px; }
+.step-body     { font-size:0.97rem;color:rgba(255,255,255,0.75);line-height:1.85; }
+.step-body strong { color:var(--gold); }
+.step-visual   { text-align:center;margin:18px 0;font-size:clamp(3rem,12vw,5.5rem);animation:mascotWiggle 2s ease-in-out infinite; }
+.finger-diagram { display:flex;gap:8px;justify-content:center;margin:16px 0;flex-wrap:wrap; }
+.finger-bubble  { width:54px;height:76px;border-radius:28px 28px 14px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:'Baloo 2',cursive;cursor:pointer;transition:transform 0.2s;box-shadow:0 4px 14px rgba(0,0,0,0.3); }
+.finger-bubble:hover { transform:translateY(-10px) scale(1.12); }
+.finger-bubble .fnum { font-size:1.4rem;font-weight:900; }
+.finger-bubble .fname { font-size:0.6rem;opacity:0.8; }
+.note-name-grid  { display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0; }
+.note-name-pill  { padding:10px 18px;border-radius:50px;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.3);transition:transform 0.2s; }
+.note-name-pill:hover { transform:scale(1.15) rotate(-2deg); }
+.staff-wrap   { background:#12102a;border-radius:16px;padding:20px;margin:14px 0;text-align:center;overflow-x:auto; }
+.rhythm-grid  { display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0; }
+.beat-box     { width:54px;height:54px;border-radius:14px;border:3px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.5rem;cursor:pointer;transition:all 0.15s;user-select:none; }
+.beat-box.active { background:var(--gold);border-color:var(--gold);color:#222;transform:scale(1.1); }
+.beat-box:hover  { border-color:var(--gold); }
+.lesson-piano-wrap { perspective:700px;display:flex;justify-content:center;margin:14px 0; }
+.lesson-piano-3d   { transform:rotateX(16deg);background:linear-gradient(160deg,#3d1800,#0d0500);border-radius:14px 14px 4px 4px;padding:14px 16px 24px;box-shadow:0 25px 55px rgba(0,0,0,0.85),0 0 0 3px #7a3000,inset 0 2px 4px rgba(255,180,60,0.2); }
+.lp-keys { display:flex;gap:4px;position:relative;height:140px; }
+.lp-wk   { width:48px;height:130px;background:linear-gradient(180deg,#FEFEFE 0%,#EDE5D5 55%,#DDD0B8 100%);border-radius:0 0 10px 10px;cursor:pointer;border:1px solid #C8BFAA;box-shadow:0 7px 0 #B0A090,0 9px 18px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,1);transition:all 0.08s;transform-origin:top center;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:8px; }
+.lp-wk .lp-label { font-family:'Baloo 2',cursive;font-size:0.8rem;font-weight:800;color:#555;pointer-events:none; }
+.lp-wk .lp-emoji { font-size:1rem;pointer-events:none;margin-bottom:2px; }
+.lp-wk:active,.lp-wk.lplit { transform:rotateX(6deg);box-shadow:0 3px 0 #B0A090,0 4px 10px rgba(0,0,0,0.3); }
+.lp-wk.lplit.ln0 { background:linear-gradient(180deg,#FF6B6B,#FF4757); }
+.lp-wk.lplit.ln1 { background:linear-gradient(180deg,#FFB347,#FFA502); }
+.lp-wk.lplit.ln2 { background:linear-gradient(180deg,#FFE040,#FFD700); }
+.lp-wk.lplit.ln3 { background:linear-gradient(180deg,#69F0AE,#2ED573); }
+.lp-wk.lplit.ln4 { background:linear-gradient(180deg,#4FC3F7,#1E90FF); }
+.lp-wk.lplit.ln5 { background:linear-gradient(180deg,#CE93D8,#A855F7); }
+.lp-wk.lplit.ln6 { background:linear-gradient(180deg,#FF80AB,#FF4FA3); }
+.lp-bk { width:30px;height:88px;background:linear-gradient(180deg,#333,#000);border-radius:0 0 7px 7px;cursor:pointer;position:absolute;z-index:3;box-shadow:0 6px 0 #000,0 8px 16px rgba(0,0,0,0.8),inset 0 1px 0 rgba(255,255,255,0.1);transition:all 0.08s;transform-origin:top center;user-select:none; }
+.lp-bk:active,.lp-bk.lplit { transform:rotateX(6deg);background:linear-gradient(180deg,#FF6B00,#CC4400); }
+.quiz-opts { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0; }
+.quiz-opt  { font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;padding:14px;border-radius:16px;border:3px solid rgba(255,255,255,0.1);background:var(--panel2);color:white;cursor:pointer;transition:all 0.2s;text-align:center; }
+.quiz-opt:hover  { border-color:var(--gold);transform:scale(1.03); }
+.quiz-opt.correct { background:rgba(46,213,115,0.25);border-color:#2ED573; }
+.quiz-opt.wrong   { background:rgba(255,71,87,0.2);border-color:#FF4757; }
+.lesson-nav { display:flex;gap:12px;justify-content:center;padding:16px 20px 30px;flex-wrap:wrap; }
+.lnav-btn   { font-family:'Baloo 2',cursive;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;font-size:1rem;font-weight:800;transition:all 0.3s; }
+.lnav-btn:hover { transform:translateY(-3px) scale(1.04);box-shadow:0 10px 30px rgba(0,0,0,0.4); }
+.lnav-next  { background:linear-gradient(135deg,#2ED573,#00C853);color:#001a00; }
+.lnav-prev  { background:var(--panel2);color:rgba(255,255,255,0.6);border:2px solid rgba(255,255,255,0.1); }
+.lnav-done  { background:linear-gradient(135deg,var(--gold),#FF4757);color:white; }
+.key-instruction { background:rgba(255,215,0,0.1);border:2px solid rgba(255,215,0,0.3);border-radius:14px;padding:14px 18px;margin:12px 0;font-family:'Baloo 2',cursive;font-size:1rem;color:var(--gold);text-align:center; }
+.fb-bar { font-family:'Baloo 2',cursive;font-size:1.5rem;min-height:2rem;text-align:center;margin:8px 0; }
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="orb orb4"></div>
+</div>
+
+<div class="top-banner" id="banner">🎉 Amazing!</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">🎹 PianoNaija!</div>
+  <div class="logo-sub">🇳🇬 Learn · Play · Shine · Naija Style</div>
+</header>
+
+<!-- MASCOT -->
+<div class="mascot-row">
+  <div class="mascot-wrap" onclick="cycleMascot()">
+    <span class="mascot-body" id="mascot">🦁</span>
+  </div>
+  <div class="bubble" id="bubble">Ẹ káàbọ̀! I am Kwame! Touch the piano and make music! 🎵</div>
+</div>
+
+<!-- SCORE BAR -->
+<div class="score-bar">
+  <div class="score-chip">⭐ Stars: <span class="val" id="starsVal">0</span></div>
+  <div class="score-chip">🏆 Score: <span class="val" id="scoreVal">0</span></div>
+  <div class="score-chip">🎵 Songs: <span class="val" id="songsVal">0</span></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab t0 on" onclick="showTab('piano',0)">🎹 Piano</button>
+  <button class="tab t1" onclick="showTab('lessons',1)">📚 Lessons</button>
+  <button class="tab t2" onclick="showTab('activities',2)">🎮 Activities</button>
+  <button class="tab t3" onclick="showTab('badges',3)">🏆 Badges</button>
+</div>
+
+<!-- ===== PIANO SECTION ===== -->
+<div class="sect on" id="s-piano">
+  <div class="piano-wrap">
+
+    <!-- Song picker -->
+    <div class="song-picker" id="songPicker"></div>
+
+    <!-- 3D Piano -->
+    <div class="piano-stage">
+      <div class="piano-3d">
+        <div class="piano-case">
+          <div class="piano-brand">✦ PianoNaija ✦</div>
+          <div class="keys-row" id="keysRow"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hint-bar">💡 Keyboard: A S D F G H J K &nbsp;|&nbsp; Black keys: W E T Y U</div>
+
+    <!-- Sheet -->
+    <div class="sheet">
+      <div class="sheet-title" id="sheetTitle">🐑 Baa Baa Black Sheep</div>
+      <div class="lyric-line" id="lyricLine">"Baa baa black sheep, have you any wool?"</div>
+      <div class="note-track" id="noteTrack"></div>
+      <div class="play-btns">
+        <button class="pb pplay" onclick="autoPlay(false)">▶ Play Song</button>
+        <button class="pb pslow" onclick="autoPlay(true)">🐢 Slow</button>
+        <button class="pb preset" onclick="startPlayAlong()">🎯 Play Along!</button>
+        <button class="pb pstop" onclick="stopAll()">⏹ Stop</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== LESSONS SECTION ===== -->
+<div class="sect" id="s-lessons">
+  <div class="sec-title">📚 Piano Lessons</div>
+  <div style="text-align:center;color:rgba(255,255,255,0.5);font-size:0.9rem;margin-bottom:20px;">
+    Complete levels in order to unlock the next! 🔓
+  </div>
+  <div class="level-road" id="levelRoad"></div>
+</div>
+
+<!-- LESSON FULL-SCREEN VIEWER -->
+<div class="lesson-overlay" id="lessonOverlay">
+  <div class="lesson-topbar">
+    <button class="lesson-back" onclick="closeLessonViewer()">← Back</button>
+    <div class="lesson-topbar-title" id="lessonOverlayTitle">Lesson</div>
+    <div class="lesson-step-ind" id="lessonStepInd">1/1</div>
+  </div>
+  <div class="lesson-content" id="lessonContent"></div>
+  <div class="lesson-nav" id="lessonNav"></div>
+</div>
+
+<!-- ===== ACTIVITIES SECTION ===== -->
+<div class="sect" id="s-activities">
+  <div class="sec-title">🎮 Fun Class Activities!</div>
+  <div class="act-grid">
+    <div class="act-card" style="--ac:#FF4757" onclick="openGame('nametune')">
+      <span class="act-icon2">🎵🤔</span>
+      <div class="act-name">Name That Tune!</div>
+      <div class="act-desc2">Listen to a few notes of a nursery rhyme and guess which song it is! Can you recognise Baa Baa Black Sheep from just 3 notes?</div>
+      <span class="act-tag">👦👧 Solo or class · Ages 4–6</span>
+    </div>
+    <div class="act-card" style="--ac:#FFD700" onclick="openGame('colour')">
+      <span class="act-icon2">🌈🎹</span>
+      <div class="act-name">Colour Note Match!</div>
+      <div class="act-desc2">See the colour card and tap the matching piano key! Red = C, Orange = D... How fast can you go?</div>
+      <span class="act-tag">👦 Solo or pairs · Ages 3–5</span>
+    </div>
+    <div class="act-card" style="--ac:#1E90FF" onclick="openGame('echo')">
+      <span class="act-icon2">🎤🎹</span>
+      <div class="act-name">Echo Echo!</div>
+      <div class="act-desc2">Listen to the pattern and echo it back on the piano! Builds ear training and memory. Can you remember 5 notes?</div>
+      <span class="act-tag">👦 1–2 players · All ages</span>
+    </div>
+    <div class="act-card" style="--ac:#A855F7" onclick="openGame('highlow')">
+      <span class="act-icon2">⬆️⬇️🎵</span>
+      <div class="act-name">High or Low?</div>
+      <div class="act-desc2">Listen to the note — is it HIGH or LOW? Jump up for high, crouch down for low! Gets tricky fast!</div>
+      <span class="act-tag">👦👧 Any number · Ages 3–6</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BADGES SECTION ===== -->
+<div class="sect" id="s-badges">
+  <div class="sec-title">🏆 My Trophy Shelf</div>
+  <div style="text-align:center;margin-bottom:12px;font-family:'Baloo 2',cursive;color:rgba(255,255,255,0.6)">
+    Keep playing to unlock all badges!
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div class="badge-shelf" id="badgeShelf"></div>
+</div>
+
+<!-- ===== GAME OVERLAYS ===== -->
+
+<!-- NAME THAT TUNE -->
+<div class="game-overlay" id="g-nametune">
+  <button class="game-close" onclick="closeGame()">✕</button>
+  <div class="game-title">🎵 Name That Tune!</div>
+  <div class="game-instr">Listen to the notes playing — then pick the right song! Fewer clues = more points! 🏆</div>
+
+  <div style="width:100%;max-width:520px;text-align:center;">
+
+    <!-- Clue counter + score -->
+    <div style="display:flex;gap:16px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;">
+      <div class="score-chip">🎵 Clues used: <span class="val" id="nttClues">0</span></div>
+      <div class="score-chip">🏆 Score: <span class="val" id="nttScore">0</span></div>
+      <div class="score-chip">✅ Round: <span class="val" id="nttRound">1</span> / 5</div>
+    </div>
+
+    <!-- Big visual display -->
+    <div id="nttVisual" style="font-size:5rem;margin:10px 0;animation:mascotWiggle 2s ease-in-out infinite;">🎹</div>
+    <div id="nttStatus" style="font-family:'Baloo 2',cursive;font-size:1.2rem;color:var(--gold);min-height:1.6rem;margin-bottom:12px;">
+      Press PLAY to hear the clue!
+    </div>
+
+    <!-- Play buttons -->
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;">
+      <button class="pb pplay" onclick="nttPlayClue(3)" id="nttBtn3">🎵 3 Notes <span style="font-size:0.75rem;opacity:0.8">(+30 pts)</span></button>
+      <button class="pb pslow" onclick="nttPlayClue(5)" id="nttBtn5">🎵🎵 5 Notes <span style="font-size:0.75rem;opacity:0.8">(+20 pts)</span></button>
+      <button class="pb preset" onclick="nttPlayClue(8)" id="nttBtn8">🎵🎵🎵 Full Intro <span style="font-size:0.75rem;opacity:0.8">(+10 pts)</span></button>
+    </div>
+
+    <!-- Answer choices -->
+    <div id="nttChoices" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;"></div>
+
+    <!-- Feedback -->
+    <div id="nttFeedback" style="font-family:'Baloo 2',cursive;font-size:1.8rem;min-height:2.2rem;margin:12px 0;"></div>
+    <button class="echo-start" id="nttNextBtn" onclick="nttNextRound()" style="display:none;">▶ Next Song!</button>
+  </div>
+</div>
+
+<!-- COLOUR MATCH -->
+<div class="game-overlay" id="g-colour">
+  <button class="game-close" onclick="closeGame()">✕</button>
+  <div class="game-title">🌈 Colour Note Match!</div>
+  <div class="game-instr">Look at the colour card — tap the matching key on the piano!</div>
+  <div class="cmatch-arena">
+    <div class="cmatch-prompt" id="cmPrompt">Tap the key that matches this colour!</div>
+    <div class="cmatch-color-card" id="cmCard" style="background:#FF4757">🎹</div>
+    <div class="cmatch-fb" id="cmFb"></div>
+    <div class="cmatch-score" id="cmScore">Score: 0 | Streak: 0</div>
+    <div class="cmatch-piano">
+      <div class="cmatch-piano-3d">
+        <div class="cmatch-keys" id="cmKeys"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ECHO -->
+<div class="game-overlay" id="g-echo">
+  <button class="game-close" onclick="closeGame()">✕</button>
+  <div class="game-title">🎤 Echo Echo!</div>
+  <div class="game-instr">Listen to the pattern — then repeat it back! Each round gets longer.</div>
+
+  <!-- Mode selector (shown before game starts) -->
+  <div id="echoModeScreen" style="width:100%;max-width:500px;text-align:center;">
+    <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;color:rgba(255,255,255,0.7);margin-bottom:14px;">
+      Choose your difficulty:
+    </div>
+    <div class="echo-mode-row">
+      <button class="echo-mode-btn" onclick="startEchoMode('easy')">
+        ⭐ Easy<br><span style="font-size:0.75rem;font-weight:500">See notes + coloured buttons</span>
+      </button>
+      <button class="echo-mode-btn" onclick="startEchoMode('medium')">
+        🔥 Medium<br><span style="font-size:0.75rem;font-weight:500">No sound hints — just colours</span>
+      </button>
+      <button class="echo-mode-btn" onclick="startEchoMode('hard')">
+        💀 Hard<br><span style="font-size:0.75rem;font-weight:500">Real piano — no labels!</span>
+      </button>
+    </div>
+    <div style="font-size:0.8rem;color:rgba(255,255,255,0.35);margin-top:10px;font-style:italic;">
+      Easy: notes play + flash · Medium: only notes play, no visuals · Hard: you find them yourself on the piano!
+    </div>
+  </div>
+
+  <!-- Game arena (shown during play) -->
+  <div class="echo-arena" id="echoGameArena" style="display:none;">
+    <div id="echoModeBadge" class="echo-mode-badge badge-easy">⭐ EASY</div>
+    <div class="echo-status" id="echoStatus">Get ready...</div>
+
+    <!-- Sequence dots (Easy shows labels, Medium shows colours only, Hard hidden) -->
+    <div class="echo-sequence" id="echoSeq"></div>
+
+    <div style="font-family:'Baloo 2',cursive;color:rgba(255,255,255,0.45);font-size:0.9rem;margin-bottom:6px;">
+      Level: <span id="echoLevel">1</span> &nbsp;|&nbsp; Score: <span id="echoScore" style="color:var(--gold)">0</span>
+    </div>
+
+    <!-- EASY: labelled colour pads -->
+    <div class="echo-keys" id="echoKeysEasy" style="display:none;"></div>
+
+    <!-- MEDIUM: colour dots only (no text) -->
+    <div class="echo-keys" id="echoKeysMedium" style="display:none;flex-wrap:wrap;gap:10px;justify-content:center;"></div>
+
+    <!-- HARD: full unlabelled piano -->
+    <div class="echo-hard-stage" id="echoKeysHard" style="display:none;">
+      <div class="echo-hard-case">
+        <div class="echo-hard-keys" id="echoHardRow"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px;">
+      <button class="echo-replay" id="echoReplayBtn" onclick="replayEchoSequence()" style="display:none;">🔁 Replay</button>
+      <button class="echo-start" id="echoBackBtn" onclick="resetEchoToMenu()" style="background:linear-gradient(135deg,#555,#333)">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- HIGH LOW -->
+<div class="game-overlay" id="g-highlow">
+  <button class="game-close" onclick="closeGame()">✕</button>
+  <div class="game-title">⬆️⬇️ High or Low?</div>
+  <div class="game-instr">Listen to the note carefully — is it a HIGH note or a LOW note?</div>
+  <div class="highlow-arena">
+    <span class="hl-note-vis" id="hlEmoji">🎵</span>
+    <div class="hl-feedback" id="hlFb"></div>
+    <div class="hl-score" id="hlScore">Score: 0 | Streak: 0</div>
+    <div class="hl-piano-mini">
+      <div style="background:#1a0900;padding:10px 12px 16px;border-radius:10px;box-shadow:0 15px 40px rgba(0,0,0,0.8),0 0 0 3px #7a3000">
+        <div id="hlKeys" style="display:flex;gap:3px;position:relative;height:90px;"></div>
+      </div>
+    </div>
+    <div class="hl-btns">
+      <button class="hl-btn hl-high" onclick="hlGuess('high')">⬆️ HIGH!</button>
+      <button class="hl-btn hl-low"  onclick="hlGuess('low')">⬇️ LOW!</button>
+    </div>
+    <button class="echo-start" onclick="hlStart()" id="hlStartBtn">🎵 START!</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   AUDIO ENGINE
+═══════════════════════════════════════════ */
+let ctx = null;
+function getCtx() {
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  return ctx;
+}
+
+const FREQS = {
+  C3:130.81, D3:146.83, E3:164.81, F3:174.61, G3:196, A3:220, B3:246.94,
+  C4:261.63, D4:293.66, E4:329.63, F4:349.23, G4:392, A4:440, B4:493.88,
+  C5:523.25, D5:587.33, E5:659.26, F5:698.46, G5:783.99,
+  Cs4:277.18, Ds4:311.13, Fs4:369.99, Gs4:415.30, As4:466.16,
+  Cs5:554.37, Ds5:622.25
+};
+
+function playFreq(freq, dur=0.9, vol=0.55) {
+  if (!freq) return;
+  const a = getCtx();
+  const osc = a.createOscillator();
+  const g = a.createGain();
+  const convolver = a.createGain(); // simple warmth
+  osc.connect(g); g.connect(a.destination);
+  osc.type = 'triangle';
+  osc.frequency.value = freq;
+  g.gain.setValueAtTime(vol, a.currentTime);
+  g.gain.setTargetAtTime(0.001, a.currentTime + dur * 0.7, 0.08);
+  osc.start(a.currentTime);
+  osc.stop(a.currentTime + dur + 0.2);
+}
+
+function playNote(name, dur) { playFreq(FREQS[name], dur || 0.9); }
+
+/* ═══════════════════════════════════════════
+   NURSERY RHYME SONGS
+═══════════════════════════════════════════ */
+const SONGS = [
+  {
+    name: '🐑 Baa Baa Black Sheep',
+    lyrics: [
+      '"Baa baa black sheep, have you any wool?"',
+      '"Yes sir, yes sir, three bags full!"',
+      '"One for the master, one for the dame,"',
+      '"One for the little boy who lives down the lane!"'
+    ],
+    notes: [
+      'C4','C4','G4','G4','A4','A4','G4',
+      'F4','F4','E4','E4','D4','D4','C4',
+      'G4','G4','F4','F4','E4','E4','D4',
+      'G4','G4','F4','F4','E4','E4','D4',
+      'C4','C4','G4','G4','A4','A4','G4',
+      'F4','F4','E4','E4','D4','D4','C4'
+    ]
+  },
+  {
+    name: '🌟 Twinkle Twinkle',
+    lyrics: [
+      '"Twinkle twinkle little star,"',
+      '"How I wonder what you are!"',
+      '"Up above the world so high,"',
+      '"Like a diamond in the sky!"'
+    ],
+    notes: [
+      'C4','C4','G4','G4','A4','A4','G4',
+      'F4','F4','E4','E4','D4','D4','C4',
+      'G4','G4','F4','F4','E4','E4','D4',
+      'G4','G4','F4','F4','E4','E4','D4',
+      'C4','C4','G4','G4','A4','A4','G4',
+      'F4','F4','E4','E4','D4','D4','C4'
+    ]
+  },
+  {
+    name: '🥚 Humpty Dumpty',
+    lyrics: [
+      '"Humpty Dumpty sat on a wall,"',
+      '"Humpty Dumpty had a great fall!"',
+      '"All the king\'s horses and all the king\'s men,"',
+      '"Couldn\'t put Humpty together again!"'
+    ],
+    notes: [
+      'G4','E4','E4','F4','D4','D4',
+      'C4','D4','E4','F4','G4','G4','G4',
+      'G4','E4','E4','F4','D4','D4',
+      'C4','E4','G4','G4','C5',
+      'A4','A4','A4','A4','G4',
+      'A4','A4','A4','A4','G4',
+      'E4','E4','E4','E4','D4','D4',
+      'G4','G4','G4','G4','C4'
+    ]
+  },
+  {
+    name: '⛰️ Jack and Jill',
+    lyrics: [
+      '"Jack and Jill went up the hill,"',
+      '"To fetch a pail of water."',
+      '"Jack fell down and broke his crown,"',
+      '"And Jill came tumbling after!"'
+    ],
+    notes: [
+      'C4','C4','E4','G4','G4','A4','G4',
+      'F4','E4','D4','C4',
+      'G4','G4','A4','B4','C5','B4','A4',
+      'G4','A4','G4','F4','E4','D4','C4'
+    ]
+  },
+  {
+    name: '🐄 Old MacDonald',
+    lyrics: [
+      '"Old MacDonald had a farm, E-I-E-I-O!"',
+      '"And on his farm he had a cow..."',
+      '"With a moo moo here, moo moo there!"',
+      '"E-I-E-I-O!"'
+    ],
+    notes: [
+      'G4','G4','G4','D4','E4','E4','D4',
+      'B4','B4','A4','A4','G4',
+      'D4',
+      'G4','G4','G4','D4','E4','E4','D4',
+      'B4','B4','A4','A4','G4',
+      'D4','D4','G4','G4','G4',
+      'G4','G4','G4','G4','G4','D4',
+      'D4','E4','E4','D4',
+      'B4','B4','A4','A4','G4'
+    ]
+  }
+];
+
+let curSong = 0, songStep = 0, playInterval = null, playAlong = false;
+
+/* ═══════════════════════════════════════════
+   PIANO KEYS BUILD
+═══════════════════════════════════════════ */
+const WHITE_DEFS = [
+  {note:'C4', idx:0, emoji:'❤️', label:'C'},
+  {note:'D4', idx:1, emoji:'🧡', label:'D'},
+  {note:'E4', idx:2, emoji:'💛', label:'E'},
+  {note:'F4', idx:3, emoji:'💚', label:'F'},
+  {note:'G4', idx:4, emoji:'💙', label:'G'},
+  {note:'A4', idx:5, emoji:'💜', label:'A'},
+  {note:'B4', idx:6, emoji:'🩷', label:'B'},
+  {note:'C5', idx:7, emoji:'❤️', label:'C\''},
+];
+const BLACK_DEFS = [
+  {note:'Cs4', afterIdx:0, offset:36},
+  {note:'Ds4', afterIdx:1, offset:96},
+  {note:'Fs4', afterIdx:3, offset:216},
+  {note:'Gs4', afterIdx:4, offset:276},
+  {note:'As4', afterIdx:5, offset:336},
+];
+
+const KW = 60; // key width + gap
+
+function buildPiano(containerId, onPress) {
+  const row = document.getElementById(containerId);
+  row.innerHTML = '';
+  const whiteEls = [];
+
+  WHITE_DEFS.forEach((def, i) => {
+    const k = document.createElement('div');
+    k.className = `wk n${def.idx}`;
+    k.dataset.note = def.note;
+    k.innerHTML = `<span class="kemoji">${def.emoji}</span><span class="klabel">${def.label}</span>`;
+    k.addEventListener('pointerdown', e => { e.preventDefault(); pressKey(k, def.note, onPress); });
+    row.appendChild(k);
+    whiteEls.push(k);
+  });
+
+  BLACK_DEFS.forEach(def => {
+    const b = document.createElement('div');
+    b.className = 'bk';
+    b.dataset.note = def.note;
+    b.style.left = def.offset + 'px';
+    b.addEventListener('pointerdown', e => { e.preventDefault(); pressKey(b, def.note, onPress); });
+    row.appendChild(b);
+  });
+
+  return row;
+}
+
+buildPiano('keysRow', null);
+
+function pressKey(el, note, extra) {
+  getCtx(); // unlock audio
+  el.classList.add('lit');
+  setTimeout(() => el.classList.remove('lit'), 250);
+  playNote(note, 0.85);
+
+  // Glow ring
+  const r = document.createElement('div');
+  r.className = 'key-glow';
+  el.appendChild(r);
+  setTimeout(() => r.remove(), 700);
+
+  // Float note
+  spawnFloat(el, note);
+
+  if (extra) extra(note);
+
+  // Main piano score
+  if (!extra) {
+    addScore(5);
+    if (playAlong) checkAlong(note);
+  }
+  setBubble(bubblePhrases[Math.floor(Math.random()*bubblePhrases.length)]);
+}
+
+/* ═══════════════════════════════════════════
+   KEYBOARD INPUT
+═══════════════════════════════════════════ */
+const KMAP = {a:'C4',s:'D4',d:'E4',f:'F4',g:'G4',h:'A4',j:'B4',k:'C5',w:'Cs4',e:'Ds4',t:'Fs4',y:'Gs4',u:'As4'};
+document.addEventListener('keydown', e => {
+  if (e.repeat || document.querySelector('.game-overlay.on')) return;
+  const note = KMAP[e.key.toLowerCase()];
+  if (note) {
+    const el = document.querySelector(`#keysRow [data-note="${note}"]`);
+    if (el) pressKey(el, note, null);
+  }
+});
+
+/* ═══════════════════════════════════════════
+   FLOAT NOTES + CONFETTI
+═══════════════════════════════════════════ */
+const FNOTES = ['🎵','🎶','⭐','✨','🌟','💫','🎹'];
+function spawnFloat(el, note) {
+  const r = el.getBoundingClientRect();
+  const fn = document.createElement('div');
+  fn.className = 'fnote';
+  fn.textContent = FNOTES[Math.floor(Math.random()*FNOTES.length)];
+  fn.style.left = (r.left + r.width/2 - 16) + 'px';
+  fn.style.top  = (r.top - 10) + 'px';
+  document.body.appendChild(fn);
+  setTimeout(() => fn.remove(), 1700);
+}
+
+function confetti() {
+  const colors = ['#FF4757','#FFD700','#2ED573','#1E90FF','#A855F7','#FF6B81','#FFA502'];
+  for (let i = 0; i < 70; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'conf';
+      c.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${1.8+Math.random()*1.2}s;animation-delay:${Math.random()*0.4}s;border-radius:${Math.random()>0.5?'50%':'3px'};`;
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 3000);
+    }, i*25);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SONG PICKER UI
+═══════════════════════════════════════════ */
+function buildSongPicker() {
+  const p = document.getElementById('songPicker');
+  p.innerHTML = '';
+  SONGS.forEach((s,i) => {
+    const b = document.createElement('button');
+    b.className = 'sp-btn' + (i===curSong?' on':'');
+    b.textContent = s.name;
+    b.onclick = () => { curSong = i; songStep = 0; stopAll(); buildSongPicker(); renderSheet(); };
+    p.appendChild(b);
+  });
+}
+
+function renderSheet() {
+  const s = SONGS[curSong];
+  document.getElementById('sheetTitle').textContent = s.name;
+  document.getElementById('lyricLine').textContent = s.lyrics[0];
+  const track = document.getElementById('noteTrack');
+  track.innerHTML = '';
+  s.notes.forEach((n,i) => {
+    const d = document.createElement('div');
+    const base = n.replace(/[0-9]/g,'').replace('s','s');
+    const cls = n.includes('s') ? 'nCs' : 'n' + n[0] + (n[1]==='5'?'5':'');
+    d.className = `nt ${cls}`;
+    d.textContent = n[0] + (n.includes('s')? '#':'');
+    d.dataset.idx = i;
+    d.onclick = () => { playNote(n); highlightNote(i); };
+    track.appendChild(d);
+  });
+}
+
+function highlightNote(idx) {
+  const pills = document.querySelectorAll('#noteTrack .nt');
+  const s = SONGS[curSong];
+  pills.forEach((p,i) => {
+    p.classList.remove('cur','done');
+    if (i < idx) p.classList.add('done');
+    if (i === idx) p.classList.add('cur');
+  });
+  // Light up piano key
+  const note = s.notes[idx];
+  const kEl = document.querySelector(`#keysRow [data-note="${note}"]`);
+  if (kEl) {
+    kEl.classList.add('lit');
+    setTimeout(() => kEl.classList.remove('lit'), 280);
+  }
+  // Update lyric line
+  const lyricIdx = Math.floor(idx / (s.notes.length / s.lyrics.length));
+  document.getElementById('lyricLine').textContent = s.lyrics[Math.min(lyricIdx, s.lyrics.length-1)];
+}
+
+let autoTimer = null;
+function autoPlay(slow) {
+  stopAll();
+  playAlong = false;
+  let i = 0;
+  const speed = slow ? 800 : 420;
+  const s = SONGS[curSong];
+  autoTimer = setInterval(() => {
+    if (i >= s.notes.length) { clearInterval(autoTimer); return; }
+    playNote(s.notes[i], slow ? 0.75 : 0.5);
+    highlightNote(i); i++;
+  }, speed);
+}
+
+function startPlayAlong() {
+  stopAll();
+  playAlong = true;
+  songStep = 0;
+  renderSheet();
+  setBubble("Now YOU play! Follow the coloured notes! 🎯");
+  showBanner("🎯 Play Along Mode! Follow the notes!");
+}
+
+function checkAlong(note) {
+  const s = SONGS[curSong];
+  if (note === s.notes[songStep]) {
+    highlightNote(songStep);
+    songStep++;
+    addScore(15);
+    if (songStep >= s.notes.length) {
+      playAlong = false;
+      addScore(200);
+      addSong();
+      confetti();
+      showBanner("🎉 You finished the whole song! Amazing! +200 pts!");
+      setBubble("E go better! You too good! 🦁🌟🎉");
+      unlockBadge(1);
+    }
+  }
+}
+
+function stopAll() {
+  if (autoTimer) clearInterval(autoTimer);
+  playAlong = false;
+  songStep = 0;
+  renderSheet();
+}
+
+/* ═══════════════════════════════════════════
+   SCORE & MASCOT
+═══════════════════════════════════════════ */
+let totalScore = 0, totalStars = 0, totalSongs = 0;
+function addScore(n) {
+  totalScore += n;
+  totalStars = Math.floor(totalScore / 50);
+  document.getElementById('scoreVal').textContent = totalScore;
+  document.getElementById('starsVal').textContent = totalStars;
+  document.getElementById('progFill').style.width = Math.min(100, totalScore/10) + '%';
+  if (totalScore >= 100) unlockBadge(2);
+  if (totalScore >= 300) unlockBadge(3);
+  if (totalScore >= 600) unlockBadge(4);
+}
+function addSong() {
+  totalSongs++;
+  document.getElementById('songsVal').textContent = totalSongs;
+  if (totalSongs >= 2) unlockBadge(5);
+  if (totalSongs >= 4) unlockBadge(6);
+}
+
+const MASCOTS = ['🦁','🐘','🦒','🦅','🐊','🦓','🐆','🦍'];
+const bubblePhrases = [
+  'Well done! You too good! 🌟','Keep going! E go sweet! 🎵','Correct! Oya continue! 👏',
+  'See this genius! 🦁','You dey do well! No stop! 🔥','Ahh! Beautiful sound! 🎹',
+  'Na so talent dey look! ⭐','Amazing! Your mama go proud! 💫'
+];
+let mascotIdx = 0;
+function cycleMascot() {
+  mascotIdx = (mascotIdx+1) % MASCOTS.length;
+  document.getElementById('mascot').textContent = MASCOTS[mascotIdx];
+}
+function setBubble(msg) {
+  const b = document.getElementById('bubble');
+  b.style.animation = 'none';
+  b.textContent = msg;
+  b.offsetWidth;
+  b.style.animation = 'bubbleIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275)';
+}
+
+function showBanner(msg, dur=3000) {
+  const b = document.getElementById('banner');
+  b.textContent = msg;
+  b.classList.add('show');
+  setTimeout(() => b.classList.remove('show'), dur);
+}
+
+/* ═══════════════════════════════════════════
+   BADGES
+═══════════════════════════════════════════ */
+const BADGES = [
+  {id:'b0', icon:'🎹', name:'First Note!',  earned:true},
+  {id:'b1', icon:'🏅', name:'Song Hero',    earned:false},
+  {id:'b2', icon:'⭐', name:'Star Player',  earned:false},
+  {id:'b3', icon:'🔥', name:'On Fire!',     earned:false},
+  {id:'b4', icon:'👑', name:'Piano King',   earned:false},
+  {id:'b5', icon:'🎵', name:'2 Songs Done', earned:false},
+  {id:'b6', icon:'🇳🇬', name:'Naija Maestro',earned:false},
+  {id:'b7', icon:'🦁', name:'Lion Heart',   earned:false},
+];
+let badgeState = [...BADGES];
+
+function buildBadges() {
+  const shelf = document.getElementById('badgeShelf');
+  shelf.innerHTML = '';
+  badgeState.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'badge-item' + (b.earned ? ' earned' : ' locked');
+    el.id = b.id;
+    el.innerHTML = `<span class="bi-icon">${b.icon}${!b.earned?'🔒':''}</span><div class="bi-name">${b.name}</div>`;
+    shelf.appendChild(el);
+  });
+}
+
+function unlockBadge(idx) {
+  if (badgeState[idx].earned) return;
+  badgeState[idx].earned = true;
+  buildBadges();
+  confetti();
+  showBanner(`🏅 New Badge: "${badgeState[idx].name}"!`);
+}
+
+/* ═══════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════ */
+function showTab(name, ti) {
+  document.querySelectorAll('.sect').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach((t,i) => { t.classList.remove('on','t0','t1','t2','t3'); });
+  document.getElementById('s-'+name).classList.add('on');
+  const tabEl = document.querySelectorAll('.tab')[ti];
+  tabEl.classList.add('on','t'+ti);
+  if (name==='badges') buildBadges();
+  if (name==='lessons') buildLevelRoad();
+}
+
+/* ═══════════════════════════════════════════
+   GAME OVERLAY
+═══════════════════════════════════════════ */
+function openGame(name) {
+  document.querySelectorAll('.game-overlay').forEach(o => o.classList.remove('on'));
+  document.getElementById('g-'+name).classList.add('on');
+  if (name==='colour')   initColourMatch();
+  if (name==='echo')     initEcho();
+  if (name==='highlow')  initHighLow();
+  if (name==='nametune') initNameTune();
+}
+function closeGame() {
+  document.querySelectorAll('.game-overlay').forEach(o => o.classList.remove('on'));
+  if (nttPlayTimer) clearInterval(nttPlayTimer);
+}
+
+/* ═══════════════════════════════════════════
+   🎵 NAME THAT TUNE
+═══════════════════════════════════════════ */
+const NTT_SONGS = [
+  { name:'🐑 Baa Baa Black Sheep', emoji:'🐑', notes:['C4','C4','G4','G4','A4','A4','G4','F4','F4','E4','E4','D4'] },
+  { name:'⭐ Twinkle Twinkle',     emoji:'⭐', notes:['C4','C4','G4','G4','A4','A4','G4','F4','F4','E4','E4','D4','D4','C4'] },
+  { name:'🥚 Humpty Dumpty',       emoji:'🥚', notes:['G4','E4','E4','F4','D4','D4','C4','D4','E4','F4','G4','G4'] },
+  { name:'⛰️ Jack and Jill',       emoji:'⛰️', notes:['C4','C4','E4','G4','G4','A4','G4','F4','E4','D4','C4'] },
+  { name:'🐄 Old MacDonald',       emoji:'🐄', notes:['G4','G4','G4','D4','E4','E4','D4','B4','B4','A4','A4','G4'] },
+];
+
+let nttRound=0, nttScore=0, nttCurrent=null, nttCluesUsed=0, nttAnswered=false;
+let nttPlayTimer=null;
+
+function initNameTune() {
+  nttRound=0; nttScore=0;
+  document.getElementById('nttScore').textContent=0;
+  document.getElementById('nttRound').textContent=1;
+  document.getElementById('nttFeedback').textContent='';
+  document.getElementById('nttNextBtn').style.display='none';
+  nttNextRound();
+}
+
+function nttNextRound() {
+  nttRound++;
+  if (nttRound > 5) { nttFinish(); return; }
+  nttCluesUsed=0; nttAnswered=false;
+
+  // Pick a song + 3 wrong options
+  const shuffled = [...NTT_SONGS].sort(()=>Math.random()-0.5);
+  nttCurrent = shuffled[0];
+  const wrongs = shuffled.slice(1,4);
+  const options = [...wrongs, nttCurrent].sort(()=>Math.random()-0.5);
+
+  document.getElementById('nttRound').textContent=nttRound;
+  document.getElementById('nttClues').textContent=0;
+  document.getElementById('nttStatus').textContent='Press PLAY to hear the clue!';
+  document.getElementById('nttVisual').textContent='🎹';
+  document.getElementById('nttFeedback').textContent='';
+  document.getElementById('nttNextBtn').style.display='none';
+
+  // Re-enable play buttons
+  ['nttBtn3','nttBtn5','nttBtn8'].forEach(id => {
+    document.getElementById(id).disabled=false;
+    document.getElementById(id).style.opacity='1';
+  });
+
+  // Build answer choices
+  const grid = document.getElementById('nttChoices');
+  grid.innerHTML='';
+  options.forEach(song => {
+    const btn = document.createElement('button');
+    btn.style.cssText=`font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:800;
+      padding:14px 10px;border-radius:16px;border:3px solid rgba(255,255,255,0.1);
+      background:var(--panel2);color:white;cursor:pointer;transition:all 0.25s;
+      display:flex;align-items:center;gap:8px;justify-content:center;`;
+    btn.innerHTML=`<span style="font-size:1.5rem">${song.emoji}</span> ${song.name.replace(/^.\s/,'')}`;
+    btn.addEventListener('pointerdown', ()=>nttGuess(song, btn, options, grid));
+    btn.addEventListener('mouseenter', ()=>{ if(!nttAnswered) btn.style.transform='scale(1.04)'; });
+    btn.addEventListener('mouseleave', ()=>{ btn.style.transform=''; });
+    grid.appendChild(btn);
+  });
+}
+
+function nttPlayClue(count) {
+  if (nttAnswered) return;
+  if (nttPlayTimer) { clearInterval(nttPlayTimer); }
+  nttCluesUsed = Math.max(nttCluesUsed, count);
+  document.getElementById('nttClues').textContent = count;
+
+  // Disable the button used (but leave harder ones available)
+  if (count===3) document.getElementById('nttBtn3').disabled=true, document.getElementById('nttBtn3').style.opacity='0.4';
+  if (count===5) { ['nttBtn3','nttBtn5'].forEach(id=>{ document.getElementById(id).disabled=true; document.getElementById(id).style.opacity='0.4'; }); }
+  if (count===8) { ['nttBtn3','nttBtn5','nttBtn8'].forEach(id=>{ document.getElementById(id).disabled=true; document.getElementById(id).style.opacity='0.4'; }); }
+
+  document.getElementById('nttStatus').textContent='🎵 Listen...';
+  document.getElementById('nttVisual').textContent=nttCurrent.emoji;
+
+  const notesToPlay = nttCurrent.notes.slice(0, count);
+  let i=0;
+  nttPlayTimer = setInterval(()=>{
+    if (i>=notesToPlay.length) {
+      clearInterval(nttPlayTimer);
+      document.getElementById('nttStatus').textContent='Now pick the song!';
+      return;
+    }
+    playNote(notesToPlay[i], 0.55);
+    i++;
+  }, 480);
+}
+
+function nttGuess(song, btn, options, grid) {
+  if (nttAnswered) return;
+  nttAnswered = true;
+  if (nttPlayTimer) clearInterval(nttPlayTimer);
+
+  const correct = song.name === nttCurrent.name;
+  const pts = correct ? (nttCluesUsed<=3 ? 30 : nttCluesUsed<=5 ? 20 : 10) : 0;
+
+  // Colour all buttons
+  Array.from(grid.children).forEach(b => {
+    const bName = b.textContent.trim();
+    const isCorrect = bName.includes(nttCurrent.name.replace(/^.\s/,''));
+    b.style.border = isCorrect ? '3px solid #2ED573' : '3px solid #FF4757';
+    b.style.background = isCorrect ? 'rgba(46,213,115,0.2)' : 'rgba(255,71,87,0.1)';
+    b.style.cursor='default';
+  });
+
+  const fb = document.getElementById('nttFeedback');
+  if (correct) {
+    nttScore += pts;
+    addScore(pts);
+    document.getElementById('nttScore').textContent=nttScore;
+    fb.textContent=`✅ Correct! +${pts} pts! ${['Amazing!','E go better!','You too sharp!','Superstar!'][Math.floor(Math.random()*4)]}`;
+    fb.style.color='#2ED573';
+    if (nttRound===5) unlockBadge(1);
+    confetti();
+  } else {
+    fb.textContent=`❌ It was ${nttCurrent.name}! Better luck next time!`;
+    fb.style.color='#FF4757';
+  }
+  fb.style.animation='none'; fb.offsetWidth; fb.style.animation='fbPop 0.4s ease';
+
+  document.getElementById('nttVisual').textContent=nttCurrent.emoji;
+  document.getElementById('nttStatus').textContent= nttRound<5 ? `Round ${nttRound}/5 done!` : 'Last round!';
+
+  setTimeout(()=>{
+    document.getElementById('nttNextBtn').style.display = nttRound<5 ? 'inline-block' : 'none';
+    if (nttRound>=5) nttFinish();
+  }, 1200);
+}
+
+function nttFinish() {
+  document.getElementById('nttStatus').textContent=`🎉 Game Over! Final score: ${nttScore}`;
+  document.getElementById('nttVisual').textContent='🏆';
+  document.getElementById('nttChoices').innerHTML='';
+  showBanner(`🎵 Name That Tune done! You scored ${nttScore} pts!`, 4000);
+  confetti();
+}
+
+/* ═══════════════════════════════════════════
+   🌈 COLOUR MATCH
+═══════════════════════════════════════════ */
+const CM_NOTES = [
+  {note:'C4', color:'#FF4757', emoji:'❤️', name:'Red = C'},
+  {note:'D4', color:'#FF8C00', emoji:'🧡', name:'Orange = D'},
+  {note:'E4', color:'#FFD700', emoji:'💛', name:'Yellow = E'},
+  {note:'F4', color:'#2ED573', emoji:'💚', name:'Green = F'},
+  {note:'G4', color:'#1E90FF', emoji:'💙', name:'Blue = G'},
+  {note:'A4', color:'#A855F7', emoji:'💜', name:'Purple = A'},
+  {note:'B4', color:'#FF4FA3', emoji:'🩷', name:'Pink = B'},
+];
+let cmCurrent=null, cmScore=0, cmStreak=0;
+
+function initColourMatch() {
+  cmScore=0; cmStreak=0;
+  document.getElementById('cmScore').textContent = 'Score: 0 | Streak: 0';
+  document.getElementById('cmFb').textContent = '';
+
+  // Build mini piano keys
+  const row = document.getElementById('cmKeys');
+  row.innerHTML='';
+  CM_NOTES.forEach(def => {
+    const k = document.createElement('div');
+    k.className = 'ck-w';
+    k.dataset.note = def.note;
+    k.style.background = `linear-gradient(180deg, #FEFEFE 0%, #EDE5D5 55%, #DDD0B8 100%)`;
+    k.textContent = def.note[0];
+    k.addEventListener('pointerdown', e => { e.preventDefault(); cmGuess(def); });
+    row.appendChild(k);
+  });
+
+  nextColour();
+}
+
+function nextColour() {
+  cmCurrent = CM_NOTES[Math.floor(Math.random() * CM_NOTES.length)];
+  const card = document.getElementById('cmCard');
+  card.style.background = cmCurrent.color;
+  card.textContent = cmCurrent.emoji;
+  card.style.animation = 'none'; card.offsetWidth;
+  card.style.animation = 'cardPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275)';
+  document.getElementById('cmPrompt').textContent = `Tap the key for this colour! (${cmCurrent.name})`;
+}
+
+function cmGuess(def) {
+  if (!cmCurrent) return;
+  playNote(def.note, 0.7);
+  const fb = document.getElementById('cmFb');
+  const kEl = document.querySelector(`#cmKeys [data-note="${def.note}"]`);
+  if (def.note === cmCurrent.note) {
+    cmScore += 10 + cmStreak*2;
+    cmStreak++;
+    fb.textContent = '✅ Correct! ' + ['Well done!','Amazing!','Superstar!','E go better!','Oya!'][Math.min(cmStreak-1,4)];
+    fb.style.animation='none'; fb.offsetWidth; fb.style.animation='fbPop 0.4s ease';
+    if (kEl) { kEl.style.background = cmCurrent.color; setTimeout(()=> kEl.style.background='', 400); }
+    addScore(10);
+    if (cmStreak===5) unlockBadge(7);
+    setTimeout(nextColour, 700);
+  } else {
+    cmStreak = 0;
+    fb.textContent = '❌ Try again! Look at the colour!';
+    fb.style.animation='none'; fb.offsetWidth; fb.style.animation='fbPop 0.4s ease';
+  }
+  document.getElementById('cmScore').textContent = `Score: ${cmScore} | Streak: ${cmStreak}`;
+}
+
+/* ═══════════════════════════════════════════
+   🎤 ECHO ECHO — 3 MODES
+   EASY   : notes play + dots show + coloured labelled pads
+   MEDIUM : notes play only (no dot flash, no labels on pads — just colours)
+   HARD   : notes play once (no dots, no pads) — full unlabelled piano to respond on
+═══════════════════════════════════════════ */
+const ECHO_NOTES  = ['C4','D4','E4','F4','G4','A4','B4'];
+const ECHO_COLORS = ['#FF4757','#FFA502','#FFD700','#2ED573','#1E90FF','#A855F7','#FF4FA3'];
+
+// Hard-mode piano layout (white + black keys, no labels)
+const HARD_WHITE = ['C4','D4','E4','F4','G4','A4','B4','C5'];
+const HARD_BLACK = [
+  {note:'Cs4', left:34}, {note:'Ds4', left:90},
+  {note:'Fs4', left:202},{note:'Gs4', left:258},{note:'As4', left:314}
+];
+
+let echoSeq=[], echoInput=[], echoLevel=1, echoScore=0;
+let echoPlaying=false, echoMode='easy';
+
+/* ── Open game → show mode menu ── */
+function initEcho() {
+  resetEchoToMenu();
+}
+
+function resetEchoToMenu() {
+  echoSeq=[]; echoInput=[]; echoLevel=1; echoScore=0; echoPlaying=false;
+  document.getElementById('echoModeScreen').style.display='block';
+  document.getElementById('echoGameArena').style.display='none';
+}
+
+/* ── Player picks mode ── */
+function startEchoMode(mode) {
+  echoMode = mode;
+  echoSeq=[]; echoInput=[]; echoLevel=1; echoScore=0; echoPlaying=false;
+
+  // Show arena, hide menu
+  document.getElementById('echoModeScreen').style.display='none';
+  document.getElementById('echoGameArena').style.display='block';
+
+  // Mode badge
+  const badge = document.getElementById('echoModeBadge');
+  badge.className = 'echo-mode-badge badge-' + mode;
+  badge.textContent = mode==='easy' ? '⭐ EASY' : mode==='medium' ? '🔥 MEDIUM' : '💀 HARD';
+
+  // Update stats display
+  document.getElementById('echoLevel').textContent = 1;
+  document.getElementById('echoScore').textContent = 0;
+
+  // Show correct input section
+  document.getElementById('echoKeysEasy').style.display   = mode==='easy'   ? 'flex' : 'none';
+  document.getElementById('echoKeysMedium').style.display = mode==='medium' ? 'flex' : 'none';
+  document.getElementById('echoKeysHard').style.display   = mode==='hard'   ? 'flex' : 'none';
+
+  // Replay button: available in medium & hard
+  document.getElementById('echoReplayBtn').style.display = (mode==='medium'||mode==='hard') ? 'inline-block' : 'none';
+
+  // Build inputs
+  if (mode==='easy')   buildEasyPads();
+  if (mode==='medium') buildMediumPads();
+  if (mode==='hard')   buildHardPiano();
+
+  // Kick off first round
+  echoNextRound();
+}
+
+/* ── Build easy pads (coloured squares with note letter) ── */
+function buildEasyPads() {
+  const row = document.getElementById('echoKeysEasy');
+  row.innerHTML='';
+  ECHO_NOTES.forEach((note,i) => {
+    const k = document.createElement('button');
+    k.className='ek'; k.dataset.note=note;
+    k.textContent=note[0];
+    k.style.background=ECHO_COLORS[i]; k.style.color='white';
+    k.addEventListener('pointerdown', e => { e.preventDefault(); if(!echoPlaying) echoTap(note,k); });
+    row.appendChild(k);
+  });
+}
+
+/* ── Build medium pads (colour circles, no letter) ── */
+function buildMediumPads() {
+  const row = document.getElementById('echoKeysMedium');
+  row.innerHTML='';
+  ECHO_NOTES.forEach((note,i) => {
+    const k = document.createElement('button');
+    k.className='ek-med'; k.dataset.note=note;
+    k.style.background=ECHO_COLORS[i];
+    k.addEventListener('pointerdown', e => { e.preventDefault(); if(!echoPlaying) echoTap(note,k); });
+    row.appendChild(k);
+  });
+}
+
+/* ── Build hard piano (white + black keys, zero labels) ── */
+function buildHardPiano() {
+  const row = document.getElementById('echoHardRow');
+  row.innerHTML='';
+  const whiteEls = [];
+
+  HARD_WHITE.forEach((note,i) => {
+    const k = document.createElement('div');
+    k.className='hk-w'; k.dataset.note=note;
+    k.addEventListener('pointerdown', e => { e.preventDefault(); if(!echoPlaying) hardKeyTap(k, note); });
+    row.appendChild(k);
+    whiteEls.push(k);
+  });
+
+  HARD_BLACK.forEach(def => {
+    const b = document.createElement('div');
+    b.className='hk-b'; b.dataset.note=def.note;
+    b.style.left=def.left+'px';
+    b.addEventListener('pointerdown', e => { e.preventDefault(); if(!echoPlaying) hardKeyTap(b, def.note); });
+    row.appendChild(b);
+  });
+}
+
+function hardKeyTap(el, note) {
+  el.classList.add('hlit');
+  setTimeout(()=>el.classList.remove('hlit'),220);
+  echoTap(note, el);
+}
+
+/* ── Add next note and play sequence ── */
+function echoNextRound() {
+  echoSeq.push(ECHO_NOTES[Math.floor(Math.random()*ECHO_NOTES.length)]);
+  echoInput=[];
+  setTimeout(()=>playEchoSequence(), 600);
+}
+
+/* ── Play the sequence ── */
+function replayEchoSequence() {
+  if (echoPlaying) return;
+  playEchoSequence();
+}
+
+function playEchoSequence() {
+  echoPlaying=true;
+
+  const showDots  = echoMode==='easy';
+  const flashPads = echoMode==='easy';
+  const statusMsg = echoMode==='easy' ? '👀 Watch & listen!' : echoMode==='medium' ? '🎵 Listen carefully!' : '👂 Listen VERY carefully!';
+  document.getElementById('echoStatus').textContent=statusMsg;
+
+  // Clear or show dots
+  if (showDots) renderEchoDots(null);
+  else document.getElementById('echoSeq').innerHTML='';
+
+  let i=0;
+  const speed = echoMode==='hard' ? 850 : 700;
+  const iv = setInterval(()=>{
+    if (i>=echoSeq.length) {
+      clearInterval(iv);
+      setTimeout(()=>{
+        echoPlaying=false;
+        document.getElementById('echoStatus').textContent='🎹 Now YOU repeat it!';
+        if (showDots) renderEchoDots(null); // reset dots (no active highlight)
+      }, 500);
+      return;
+    }
+    const note=echoSeq[i];
+    const ni=ECHO_NOTES.indexOf(note);
+
+    // Always play audio
+    playNote(note, 0.55);
+
+    // Easy only: flash dots + pads
+    if (showDots) renderEchoDots(i);
+    if (flashPads) {
+      const kEl = document.querySelector(`#echoKeysEasy [data-note="${note}"]`);
+      if (kEl) { kEl.style.opacity='0.35'; setTimeout(()=>kEl.style.opacity='1',380); }
+    }
+
+    i++;
+  }, speed);
+}
+
+/* ── Render coloured dots row (Easy only) ── */
+function renderEchoDots(activeIdx) {
+  const row = document.getElementById('echoSeq');
+  row.innerHTML='';
+  echoSeq.forEach((n,i)=>{
+    const ni=ECHO_NOTES.indexOf(n);
+    const d=document.createElement('div');
+    d.className='echo-note-dot'+(i===activeIdx?' flash':'');
+    d.style.background=ECHO_COLORS[ni];
+    d.textContent=n[0];
+    row.appendChild(d);
+  });
+}
+
+/* ── Player taps a pad / key ── */
+function echoTap(note, el) {
+  playNote(note, 0.65);
+
+  // Visual feedback on pad
+  if (el) {
+    const orig = el.style.opacity||'1';
+    el.style.opacity='0.35';
+    setTimeout(()=>el.style.opacity=orig,200);
+  }
+
+  const expected = echoSeq[echoInput.length];
+  if (note===expected) {
+    echoInput.push(note);
+    // Correct so far — if sequence complete
+    if (echoInput.length===echoSeq.length) {
+      echoScore += echoLevel * (echoMode==='easy'?20 : echoMode==='medium'?35 : 55);
+      echoLevel++;
+      addScore(echoMode==='easy'?15 : echoMode==='medium'?25 : 40);
+      document.getElementById('echoScore').textContent=echoScore;
+      document.getElementById('echoLevel').textContent=echoLevel;
+      document.getElementById('echoStatus').textContent='✅ Correct! Well done! 🎉';
+      if (echoLevel>3) unlockBadge(3);
+      if (echoLevel>5 && echoMode==='hard') unlockBadge(4);
+      echoInput=[];
+      setTimeout(echoNextRound, 1000);
+    }
+  } else {
+    // Wrong
+    document.getElementById('echoStatus').textContent='❌ Wrong! Listen again...';
+    echoInput=[];
+    setTimeout(()=>playEchoSequence(), 1100);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   ⬆️⬇️ HIGH LOW
+═══════════════════════════════════════════ */
+const HL_HIGH = ['C5','D5','E5','G5'];
+const HL_LOW  = ['C3','D3','E3','G3'];
+const HL_ALL  = [...HL_HIGH, ...HL_LOW];
+let hlCurrent=null, hlScore=0, hlStreak=0, hlActive=false;
+
+function initHighLow() {
+  hlScore=0; hlStreak=0; hlActive=false;
+  document.getElementById('hlScore').textContent='Score: 0 | Streak: 0';
+  document.getElementById('hlFb').textContent='';
+  document.getElementById('hlEmoji').textContent='🎵';
+  document.getElementById('hlStartBtn').style.display='block';
+
+  // mini keys for visual
+  const row = document.getElementById('hlKeys');
+  row.innerHTML='';
+  ['C4','D4','E4','F4','G4','A4','B4'].forEach((n,i) => {
+    const k = document.createElement('div');
+    k.style.cssText=`width:34px;height:80px;background:linear-gradient(180deg,#FEFEFE,#DDD0B8);border:1px solid #C8BFAA;border-radius:0 0 7px 7px;box-shadow:0 5px 0 #B0A090;`;
+    row.appendChild(k);
+  });
+}
+
+function hlStart() {
+  document.getElementById('hlStartBtn').style.display='none';
+  hlActive = true;
+  nextHL();
+}
+
+function nextHL() {
+  hlCurrent = HL_ALL[Math.floor(Math.random()*HL_ALL.length)];
+  const isHigh = HL_HIGH.includes(hlCurrent);
+  document.getElementById('hlEmoji').textContent = isHigh ? '🎵' : '🎶';
+  document.getElementById('hlEmoji').style.animation='none';
+  document.getElementById('hlEmoji').offsetWidth;
+  document.getElementById('hlEmoji').style.animation='hlFloat 1s ease-in-out infinite alternate';
+  document.getElementById('hlEmoji').style.fontSize = isHigh ? '3rem' : '6rem';
+  setTimeout(() => playNote(hlCurrent, 1.0), 200);
+}
+
+function hlGuess(guess) {
+  if (!hlActive || !hlCurrent) return;
+  const correct = HL_HIGH.includes(hlCurrent) ? 'high' : 'low';
+  const fb = document.getElementById('hlFb');
+  if (guess===correct) {
+    hlScore += 10 + hlStreak*3;
+    hlStreak++;
+    addScore(10);
+    fb.textContent = ['✅ Correct! 🎉','✅ Amazing! ⭐','✅ You are too sharp! 🔥'][Math.min(hlStreak-1,2)];
+    fb.style.color=correct==='high'?'#FF4757':'#1E90FF';
+    if (hlStreak>=5) unlockBadge(2);
+  } else {
+    hlStreak=0;
+    fb.textContent = `❌ It was ${correct.toUpperCase()}! Listen again!`;
+    fb.style.color='#888';
+  }
+  fb.style.animation='none'; fb.offsetWidth; fb.style.animation='fbPop 0.4s ease';
+  document.getElementById('hlScore').textContent=`Score: ${hlScore} | Streak: ${hlStreak}`;
+  setTimeout(nextHL, 1000);
+}
+
+/* ═══════════════════════════════════════════
+   📚 LESSON CURRICULUM
+   Ages 3–10 · 4 Levels · 18 Lessons Total
+═══════════════════════════════════════════ */
+
+const CURRICULUM = [
+  {
+    id:'l1', title:'Level 1 — Hello Piano!', emoji:'👋', age:'Ages 3–5',
+    color:'#FF4757', grad:'linear-gradient(135deg,#FF4757,#FF6B81)',
+    lessons:[
+      {
+        id:'l1a', title:'Meet the Piano', sub:'What is a piano? Let\'s explore!', emoji:'🎹',
+        steps:[
+          { type:'explain', heading:'Welcome to the Piano! 🎹',
+            body:`A piano is a beautiful instrument with <strong>black and white keys</strong>. When you press a key, a little hammer inside hits a string and makes a sound! The piano can make <strong>many different sounds</strong> — from very low (like a lion roaring 🦁) to very high (like a bird singing 🐦).`,
+            visual:'🎹' },
+          { type:'explain', heading:'High Notes & Low Notes',
+            body:`The keys on the <strong>LEFT side</strong> make LOW sounds — like a big elephant 🐘.<br><br>The keys on the <strong>RIGHT side</strong> make HIGH sounds — like a little bird 🐦.<br><br>The more you go right, the higher the sound!`,
+            visual:'⬅️🐘 &nbsp;&nbsp;&nbsp; 🐦➡️' },
+          { type:'try', heading:'Try It! Press Some Keys!',
+            body:`Press the keys below! Try the ones on the far LEFT — can you hear how LOW they sound? Now try the far RIGHT — hear how HIGH they are! 🎉`,
+            interactive:'piano_explore' },
+          { type:'quiz', heading:'Quick Quiz! 🌟',
+            body:'Which side of the piano makes LOW sounds?',
+            opts:['Left side ⬅️','Right side ➡️','The middle 🎯','Both sides!'],
+            answer:0 }
+        ]
+      },
+      {
+        id:'l1b', title:'Finger Numbers', sub:'Number your fingers 1–5!', emoji:'✋',
+        steps:[
+          { type:'explain', heading:'Your Fingers Have Numbers! ✋',
+            body:`Every finger on your hand has a special number. This helps us know <strong>which finger to use</strong> when playing piano!<br><br>Hold up your <strong>right hand</strong> 🖐️ and look at it carefully:`,
+            visual:'✋',
+            interactive:'finger_diagram' },
+          { type:'explain', heading:'Left Hand Too! 🤚',
+            body:`Your <strong>left hand</strong> fingers have the same numbers, but this time your <strong>thumb is also finger 1</strong> and your <strong>pinky is finger 5</strong>.<br><br>Tap each finger on the table as you count: <strong>1, 2, 3, 4, 5!</strong>`,
+            visual:'🤚' },
+          { type:'try', heading:'Tap Your Fingers!',
+            body:`Let\'s practise! When you see a number, tap that finger on your knee:<br><br><strong>Thumb = 1 · Index = 2 · Middle = 3 · Ring = 4 · Pinky = 5</strong>`,
+            interactive:'finger_quiz' },
+          { type:'quiz', heading:'Which finger is number 3? 🌟',
+            body:'Look at your right hand. Which finger is number 3?',
+            opts:['Thumb','Index finger','Middle finger 🖕','Pinky'],
+            answer:2 }
+        ]
+      },
+      {
+        id:'l1c', title:'Hand Position', sub:'Sit up straight & curve those fingers!', emoji:'🪑',
+        steps:[
+          { type:'explain', heading:'Sit Like a Piano Champion! 🪑',
+            body:`Good posture makes playing easy and fun! Here\'s how to sit:<br><br>✅ <strong>Sit up straight</strong> — back nice and tall<br>✅ <strong>Feet flat</strong> on the floor<br>✅ <strong>Elbows level</strong> with the keys<br>✅ <strong>Relax your shoulders</strong> — no hunching!`,
+            visual:'🪑' },
+          { type:'explain', heading:'The Curved Hand Shape 🌸',
+            body:`Imagine you\'re <strong>holding a big orange</strong> 🍊 in your hand. Your fingers naturally curve — that\'s the perfect piano hand shape!<br><br>Your fingers should be <strong>curved and relaxed</strong>, not flat or stiff. Press the keys with the <strong>tips of your fingers</strong>, not the flat part.`,
+            visual:'🍊' },
+          { type:'try', heading:'Practice Position on the Piano!',
+            body:`Place your <strong>right hand</strong> on the piano with curved fingers. Press <strong>finger 3 (middle finger)</strong> on the middle of the piano. Keep your hand curved like you\'re holding an orange!`,
+            interactive:'hand_position' },
+          { type:'quiz', heading:'What shape should your hand be? 🌟',
+            body:'When playing piano, your hand should look like you are...',
+            opts:['Holding an orange 🍊','Flat like a pancake 🥞','Making a fist ✊','Pointing one finger ☝️'],
+            answer:0 }
+        ]
+      }
+    ]
+  },
+  {
+    id:'l2', title:'Level 2 — Note Names', emoji:'🎵', age:'Ages 4–6',
+    color:'#FFA502', grad:'linear-gradient(135deg,#FFA502,#FFD700)',
+    lessons:[
+      {
+        id:'l2a', title:'Meet C D E', sub:'Your first three notes!', emoji:'🌈',
+        steps:[
+          { type:'explain', heading:'The Musical Alphabet 🎵',
+            body:`Music uses only <strong>7 letters</strong>: A, B, C, D, E, F, G. Then it starts again! These letters are the names of the piano keys.<br><br>We always start learning from <strong>C</strong> — the most important note! Let\'s meet the first three notes: <strong>C, D, and E</strong>`,
+            visual:'🎵' },
+          { type:'explain', heading:'Finding C on the Piano 🔴',
+            body:`Here\'s a trick! Look at the <strong>black keys</strong> — they come in groups of 2 and groups of 3.<br><br><strong>C is always the white key just to the LEFT of the group of 2 black keys!</strong><br><br>Find C, then D is the next white key, and E is after that!`,
+            visual:'⬛⬛ ← look here!',
+            interactive:'find_cde' },
+          { type:'try', heading:'Press C, D, and E!',
+            body:`Can you find and press <strong>C</strong> (red 🔴), then <strong>D</strong> (orange 🟠), then <strong>E</strong> (yellow 🟡)? The keys will glow when you find them!`,
+            interactive:'cde_practice' },
+          { type:'quiz', heading:'Where is C? 🌟',
+            body:'C is the white key just to the LEFT of...',
+            opts:['3 black keys','2 black keys 🎯','The very first key','Any black key'],
+            answer:1 }
+        ]
+      },
+      {
+        id:'l2b', title:'Meet F G A B', sub:'Complete the musical alphabet!', emoji:'🌟',
+        steps:[
+          { type:'explain', heading:'F, G, A, and B! 🌟',
+            body:`Great job learning C, D, E! Now let\'s meet the rest of the family:<br><br>🟢 <strong>F</strong> — the white key just LEFT of the 3 black keys<br>🔵 <strong>G</strong> — next after F<br>💜 <strong>A</strong> — next after G<br>🩷 <strong>B</strong> — next after A<br><br>Then it starts again with C!`,
+            visual:'🌟' },
+          { type:'try', heading:'Find All 7 Notes!',
+            body:`Find and press each note on the piano below. The colours will help you remember them! <strong>C D E F G A B</strong> — that\'s the whole musical alphabet!`,
+            interactive:'all_notes' },
+          { type:'explain', heading:'A Naija Way to Remember! 🇳🇬',
+            body:`Here\'s a fun trick to remember the order:<br><br><strong>"Correct! David Eats Fufu, Good And Buttery!"</strong> 😄<br><br>C-D-E-F-G-A-B! Say it out loud with Kwame!`,
+            visual:'🦁' },
+          { type:'quiz', heading:'What comes after E? 🌟',
+            body:'In the musical alphabet C-D-E-?-G-A-B, what is the missing note?',
+            opts:['A','B','F 🎯','G'],
+            answer:2 }
+        ]
+      },
+      {
+        id:'l2c', title:'Reading Note Colours', sub:'Learn the colour code system!', emoji:'🌈',
+        steps:[
+          { type:'explain', heading:'Every Note Has a Colour! 🌈',
+            body:`In PianoNaija, each note has its own special colour to help you learn:<br><br>🔴 <strong>C</strong> = Red &nbsp; 🟠 <strong>D</strong> = Orange &nbsp; 🟡 <strong>E</strong> = Yellow<br>🟢 <strong>F</strong> = Green &nbsp; 🔵 <strong>G</strong> = Blue &nbsp; 💜 <strong>A</strong> = Purple &nbsp; 🩷 <strong>B</strong> = Pink<br><br>Think of it like a rainbow — just remember <strong>Roy G Biv</strong> but for music!`,
+            visual:'🌈' },
+          { type:'try', heading:'Colour Match Challenge!',
+            body:`I will show you a colour — press the matching key on the piano! Ready?`,
+            interactive:'colour_match_lesson' },
+          { type:'quiz', heading:'What colour is G? 🌟',
+            body:'Quick! What colour is the note G in PianoNaija?',
+            opts:['Red 🔴','Yellow 🟡','Blue 🔵 🎯','Green 🟢'],
+            answer:2 }
+        ]
+      }
+    ]
+  },
+  {
+    id:'l3', title:'Level 3 — Rhythm & Reading', emoji:'🥁', age:'Ages 5–8',
+    color:'#2ED573', grad:'linear-gradient(135deg,#2ED573,#1E90FF)',
+    lessons:[
+      {
+        id:'l3a', title:'Counting Beats', sub:'Feel the pulse of music!', emoji:'🥁',
+        steps:[
+          { type:'explain', heading:'What is a Beat? 🥁',
+            body:`A <strong>beat</strong> is the steady pulse in music — like a heartbeat! When you tap your foot to music, you\'re feeling the beat.<br><br>Most music counts in groups of <strong>4 beats</strong>: <strong>1 — 2 — 3 — 4!</strong><br><br>Try clapping along: CLAP — CLAP — CLAP — CLAP!`,
+            visual:'💓' },
+          { type:'try', heading:'Tap the Beat!',
+            body:`Press the beat boxes below in order — 1, 2, 3, 4! Keep a steady pace, like a clock ticking. The piano will play along!`,
+            interactive:'beat_tap' },
+          { type:'explain', heading:'Long Notes and Short Notes 🎵',
+            body:`Some notes are <strong>LONG</strong> — they last for the whole beat (we call these quarter notes).<br><br>Some notes are <strong>SHORT</strong> — they only last half a beat!<br><br>We write them with symbols on paper — that\'s called <strong>sheet music</strong>!`,
+            visual:'𝅗𝅥 𝅘𝅥𝅯' },
+          { type:'quiz', heading:'How many beats in most songs? 🌟',
+            body:'Most songs count in groups of how many beats?',
+            opts:['2 beats','3 beats','4 beats 🎯','6 beats'],
+            answer:2 }
+        ]
+      },
+      {
+        id:'l3b', title:'Reading Sheet Music', sub:'Notes on lines — what do they mean?', emoji:'📄',
+        steps:[
+          { type:'explain', heading:'What is Sheet Music? 📄',
+            body:`Sheet music is like a <strong>map for your fingers!</strong> It tells you exactly which notes to play and for how long.<br><br>Music is written on <strong>5 lines</strong> called a <strong>staff</strong>. Notes are placed on or between these lines, and their position tells you <strong>which piano key to press</strong>!`,
+            visual:'🎼' },
+          { type:'explain', heading:'The Treble Clef 🎼',
+            body:`The curly symbol at the start of music is called the <strong>Treble Clef</strong> 𝄞. It tells us we\'re reading notes for the <strong>right hand</strong>.<br><br>The <strong>higher</strong> the note is on the staff, the <strong>higher</strong> the sound. The <strong>lower</strong> the note, the <strong>lower</strong> the sound!`,
+            interactive:'staff_display' },
+          { type:'try', heading:'Match the Note to the Key!',
+            body:`I will show you a note on the staff. Can you find and press the right key on the piano?`,
+            interactive:'staff_match' },
+          { type:'quiz', heading:'What does the Treble Clef tell us? 🌟',
+            body:'The Treble Clef (the curly symbol) at the start of music tells us...',
+            opts:['Play slowly','Use your right hand 🎯','This is a song','Play loudly'],
+            answer:1 }
+        ]
+      },
+      {
+        id:'l3c', title:'Left Hand vs Right Hand', sub:'Two hands, two jobs!', emoji:'🤝',
+        steps:[
+          { type:'explain', heading:'Two Hands — Two Jobs! 🤝',
+            body:`Both your hands play the piano at the same time, but they do <strong>different things</strong>:<br><br>🖐️ <strong>Right Hand</strong> — plays the <strong>melody</strong> (the main tune you sing along to)<br>🤚 <strong>Left Hand</strong> — plays the <strong>accompaniment</strong> (the background music that supports the melody)<br><br>Together they make a full, beautiful sound!`,
+            visual:'🖐️🤚' },
+          { type:'try', heading:'Right Hand Practice — C D E!',
+            body:`Let\'s practise the right hand first. Place <strong>finger 1 (thumb)</strong> on C, <strong>finger 2</strong> on D, and <strong>finger 3</strong> on E. Now press them one by one: C → D → E → D → C!`,
+            interactive:'rh_cde' },
+          { type:'try', heading:'Left Hand Practice — G and C!',
+            body:`Now the left hand! Place your <strong>left hand finger 5 (pinky)</strong> on G, and <strong>finger 1 (thumb)</strong> on C. Press them: G → C → G → C! This is a basic left-hand pattern.`,
+            interactive:'lh_gc' },
+          { type:'quiz', heading:'Which hand plays the melody? 🌟',
+            body:'Which hand usually plays the main tune (melody) that you sing along to?',
+            opts:['Left hand 🤚','Right hand 🖐️ 🎯','Both hands together','Neither hand'],
+            answer:1 }
+        ]
+      }
+    ]
+  },
+  {
+    id:'l4', title:'Level 4 — Play Songs!', emoji:'🎶', age:'Ages 6–10',
+    color:'#A855F7', grad:'linear-gradient(135deg,#A855F7,#1E90FF)',
+    lessons:[
+      {
+        id:'l4a', title:'Mary Had a Little Lamb', sub:'Your first complete song!', emoji:'🐑',
+        steps:[
+          { type:'explain', heading:'Your First Full Song! 🐑',
+            body:`You\'re ready to play a real song! <strong>Mary Had a Little Lamb</strong> uses only 3 notes: <strong>E, D, and C</strong>.<br><br>Here\'s how the melody goes:<br><br><strong>E D C D — E E E</strong> (Mary had a little lamb)<br><strong>D D D — E G G</strong> (Had a fleece as white as...)<br><strong>E D C D — E E E E</strong> (snow!)<br><strong>D D E D — C</strong>`,
+            visual:'🐑' },
+          { type:'try', heading:'Learn It Step by Step!',
+            body:`Follow the highlighted keys! The <strong>coloured dots</strong> show you which key to press next. Take your time — it\'s okay to go slowly!`,
+            interactive:'song_mary' },
+          { type:'try', heading:'Now Play the Whole Song!',
+            body:`Ready to play it all the way through? Press <strong>Play Along</strong> and follow the notes. You can do it! 🌟`,
+            interactive:'song_mary_full' },
+          { type:'quiz', heading:'Which notes are in Mary Had a Little Lamb? 🌟',
+            body:'Mary Had a Little Lamb uses only...',
+            opts:['A, B, C','C, D, E 🎯','F, G, A','All 7 notes'],
+            answer:1 }
+        ]
+      },
+      {
+        id:'l4b', title:'Twinkle Twinkle', sub:'Everyone\'s favourite! A little harder.', emoji:'⭐',
+        steps:[
+          { type:'explain', heading:'Twinkle Twinkle Little Star ⭐',
+            body:`You already know this song from singing it! Now let\'s play it on the piano.<br><br>Twinkle Twinkle uses more notes than Mary: <strong>C, D, E, F, G, A</strong>.<br><br>The famous opening goes:<br><strong>C C G G A A G</strong> — "Twinkle twinkle little star"<br><strong>F F E E D D C</strong> — "How I wonder what you are"`,
+            visual:'⭐' },
+          { type:'try', heading:'The Opening Line!',
+            body:`Let\'s learn just the first line: <strong>C-C-G-G-A-A-G</strong>. The highlighted keys will guide you. Press each one in order!`,
+            interactive:'song_twinkle_1' },
+          { type:'try', heading:'Full Song — Play Along!',
+            body:`Now the whole song! Follow the coloured note pills below the piano. Press Play Along then match each note as it highlights!`,
+            interactive:'song_twinkle_full' },
+          { type:'quiz', heading:'What is the first note of Twinkle Twinkle? 🌟',
+            body:'Twinkle Twinkle Little Star starts on which note?',
+            opts:['G','A','E','C 🎯'],
+            answer:3 }
+        ]
+      },
+      {
+        id:'l4c', title:'Baa Baa Black Sheep', sub:'Naija kids love this one!', emoji:'🐏',
+        steps:[
+          { type:'explain', heading:'Baa Baa Black Sheep! 🐏',
+            body:`Did you know Baa Baa Black Sheep and Twinkle Twinkle use the <strong>exact same tune</strong>? 😮 The melody is identical — only the words are different!<br><br>So if you can play Twinkle Twinkle, you can already play Baa Baa Black Sheep!<br><br>It goes: <strong>C-C-G-G-A-A-G</strong> — "Baa baa black sheep, have you any wool?"`,
+            visual:'🐏' },
+          { type:'try', heading:'Sing and Play Together!',
+            body:`This time, try to <strong>sing the words</strong> while you play! "Baa baa black sheep, have you any wool?" — press the keys along to the song and sing out loud! Kwame will cheer you on! 🦁`,
+            interactive:'song_baa' },
+          { type:'explain', heading:'Challenge: Can You Play It Without Help?',
+            body:`You\'ve come so far! Now try playing Baa Baa Black Sheep <strong>without the highlights</strong>. Just remember: <strong>C-C-G-G-A-A-G, F-F-E-E-D-D-C</strong>!<br><br>If you get stuck, press the slow button in the Piano tab!`,
+            visual:'🏆' },
+          { type:'quiz', heading:'Which song has the same tune as Twinkle Twinkle? 🌟',
+            body:'Which of these nursery rhymes shares the exact same melody as Twinkle Twinkle?',
+            opts:['Jack and Jill','Humpty Dumpty','Baa Baa Black Sheep 🎯','Old MacDonald'],
+            answer:2 }
+        ]
+      }
+    ]
+  }
+];
+
+/* ── State ── */
+let lessonProgress = {}; // lessonId -> true/false
+let currentLesson  = null;
+let currentStep    = 0;
+let quizAnswered   = false;
+let lpPracticeNotes = []; // for lesson piano tracking
+
+/* ── Build the level road ── */
+function buildLevelRoad() {
+  const road = document.getElementById('levelRoad');
+  road.innerHTML = '';
+
+  CURRICULUM.forEach((level, li) => {
+    const prevLevelDone = li === 0 || CURRICULUM[li-1].lessons.every(l => lessonProgress[l.id]);
+    const isLocked = !prevLevelDone;
+    const doneLessons = level.lessons.filter(l => lessonProgress[l.id]).length;
+    const pct = Math.round((doneLessons / level.lessons.length) * 100);
+
+    const block = document.createElement('div');
+    block.className = 'level-block' + (isLocked ? ' locked' : ' unlocked');
+    block.dataset.levelId = level.id;
+
+    block.innerHTML = `
+      <div class="level-header" onclick="${isLocked ? 'lockedTap()' : `toggleLevel('${level.id}')`}">
+        <div class="level-badge" style="background:${level.grad}">${isLocked ? '🔒' : level.emoji}</div>
+        <div class="level-info">
+          <div class="level-title">${level.title}</div>
+          <div class="level-meta">${level.age} · ${level.lessons.length} lessons · ${doneLessons}/${level.lessons.length} done</div>
+        </div>
+        <div class="level-arrow">${isLocked ? '' : '▶'}</div>
+      </div>
+      <div class="level-prog" style="${isLocked ? 'display:none' : ''}">
+        <div class="level-prog-fill" style="width:${pct}%;background:${level.grad}"></div>
+      </div>
+      <div class="lesson-list" id="ll-${level.id}">
+        ${level.lessons.map((lesson, i) => {
+          const prevDone = i === 0 || lessonProgress[level.lessons[i-1].id];
+          const done = lessonProgress[lesson.id];
+          const locked = !prevDone && !done;
+          return `
+            <div class="lesson-row${done?' done':''}${locked?' locked-lesson':''}"
+              onclick="${locked ? '' : `openLesson('${level.id}','${lesson.id}')`}">
+              <div class="lesson-dot" style="background:${done ? 'rgba(46,213,115,0.3)' : locked ? 'rgba(255,255,255,0.05)' : level.grad}">
+                ${done ? '✅' : locked ? '🔒' : lesson.emoji}
+              </div>
+              <div class="lesson-row-info">
+                <div class="lesson-row-title">${lesson.title}</div>
+                <div class="lesson-row-sub">${lesson.sub} · ${lesson.steps.length} steps</div>
+              </div>
+              <div class="lesson-status">${done ? '⭐' : locked ? '' : '▶'}</div>
+            </div>`;
+        }).join('')}
+      </div>`;
+    road.appendChild(block);
+
+    // Auto-open first incomplete level
+    if (!isLocked && doneLessons < level.lessons.length && li === CURRICULUM.findIndex(lv => !lv.lessons.every(l => lessonProgress[l.id]))) {
+      block.classList.add('open');
+    }
+  });
+}
+
+function toggleLevel(levelId) {
+  const block = document.querySelector(`[data-level-id="${levelId}"]`);
+  block.classList.toggle('open');
+}
+
+function lockedTap() {
+  showBanner('🔒 Finish the previous level first!');
+  setBubble('Complete all lessons in the level above first! 🦁');
+}
+
+/* ── Open a lesson ── */
+function openLesson(levelId, lessonId) {
+  const level  = CURRICULUM.find(l => l.id === levelId);
+  const lesson = level.lessons.find(l => l.id === lessonId);
+  currentLesson = { level, lesson };
+  currentStep   = 0;
+  quizAnswered  = false;
+
+  document.getElementById('lessonOverlay').classList.add('on');
+  document.getElementById('lessonOverlayTitle').textContent = lesson.title;
+  renderLessonStep();
+}
+
+function closeLessonViewer() {
+  document.getElementById('lessonOverlay').classList.remove('on');
+  buildLevelRoad();
+}
+
+function renderLessonStep() {
+  const { level, lesson } = currentLesson;
+  const step = lesson.steps[currentStep];
+  const total = lesson.steps.length;
+  quizAnswered = false;
+
+  document.getElementById('lessonStepInd').textContent = `${currentStep+1}/${total}`;
+  document.getElementById('lessonOverlayTitle').textContent = lesson.title;
+
+  const content = document.getElementById('lessonContent');
+  const typeLabel = { explain:'📖 Learn', try:'🎹 Practice', quiz:'🌟 Quiz' };
+  const typeCls   = { explain:'badge-explain', try:'badge-try', quiz:'badge-quiz' };
+
+  let html = `<div class="step-card">
+    <span class="step-type-badge ${typeCls[step.type]}">${typeLabel[step.type]}</span>
+    <div class="step-heading">${step.heading}</div>
+    <div class="step-body">${step.body}</div>`;
+
+  // Visual emoji
+  if (step.visual && !step.interactive) {
+    html += `<div class="step-visual">${step.visual}</div>`;
+  }
+
+  // Interactive content
+  if (step.interactive) html += buildInteractive(step.interactive, step, level);
+
+  // Quiz options
+  if (step.type === 'quiz') {
+    html += `<div class="quiz-opts" id="quizOpts">
+      ${step.opts.map((o,i) => `<button class="quiz-opt" onclick="answerQuiz(${i},${step.answer})">${o}</button>`).join('')}
+    </div>
+    <div class="fb-bar" id="quizFb"></div>`;
+  }
+
+  html += `</div>`;
+  content.innerHTML = html;
+
+  // Build nav
+  buildLessonNav(total);
+
+  // Attach lesson piano listeners after render
+  setTimeout(() => attachLessonPiano(), 50);
+}
+
+function buildInteractive(type, step, level) {
+  const EMOJIS = ['❤️','🧡','💛','💚','💙','💜','🩷'];
+  const NOTES_DEF = ['C4','D4','E4','F4','G4','A4','B4'];
+  const COLORS = ['#FF4757','#FFA502','#FFD700','#2ED573','#1E90FF','#A855F7','#FF4FA3'];
+
+  const pianoHTML = (showLabel=true) => {
+    const wkeys = ['C4','D4','E4','F4','G4','A4','B4'];
+    const bkeys = [{n:'Cs4',l:32},{n:'Ds4',l:88},{n:'Fs4',l:200},{n:'Gs4',l:256},{n:'As4',l:312}];
+    let khtml = wkeys.map((n,i) => `<div class="lp-wk ln${i}" data-note="${n}" data-idx="${i}">
+      ${showLabel ? `<span class="lp-emoji">${EMOJIS[i]}</span><span class="lp-label">${n[0]}</span>` : ''}
+    </div>`).join('');
+    bkeys.forEach(b => { khtml += `<div class="lp-bk" data-note="${b.n}" style="left:${b.l}px"></div>`; });
+    return `<div class="lesson-piano-wrap"><div class="lesson-piano-3d"><div class="lp-keys" id="lpKeys">${khtml}</div></div></div>`;
+  };
+
+  switch(type) {
+    case 'piano_explore':
+    case 'cde_practice':
+    case 'all_notes':
+    case 'hand_position':
+    case 'rh_cde':
+    case 'lh_gc':
+    case 'song_mary':
+    case 'song_mary_full':
+    case 'song_twinkle_1':
+    case 'song_twinkle_full':
+    case 'song_baa':
+      return pianoHTML(true);
+
+    case 'finger_diagram':
+      const fingers = [
+        {n:'1',name:'Thumb',color:'#FF4757'},{n:'2',name:'Index',color:'#FFA502'},
+        {n:'3',name:'Middle',color:'#FFD700'},{n:'4',name:'Ring',color:'#2ED573'},
+        {n:'5',name:'Pinky',color:'#1E90FF'}
+      ];
+      return `<div class="finger-diagram">${fingers.map(f=>`
+        <div class="finger-bubble" style="background:${f.color}" onclick="fingerTap('${f.n}','${f.name}')">
+          <span class="fnum">${f.n}</span><span class="fname">${f.name}</span>
+        </div>`).join('')}</div>
+        <div class="fb-bar" id="fingerFb"></div>`;
+
+    case 'finger_quiz':
+      return `<div class="finger-diagram">${[1,2,3,4,5].map(n=>`
+        <div class="finger-bubble" style="background:${COLORS[n-1]}" onclick="fingerTap('${n}','F${n}')">
+          <span class="fnum">${n}</span>
+        </div>`).join('')}</div>
+        <div class="key-instruction" id="fingerTask">Tap finger <strong>1</strong> (thumb)!</div>
+        <div class="fb-bar" id="fingerFb"></div>`;
+
+    case 'find_cde':
+      return `<div class="key-instruction">Look for the group of <strong>2 black keys</strong> ⬛⬛ — C is the white key just to the LEFT!</div>` + pianoHTML(true);
+
+    case 'beat_tap':
+      return `<div class="rhythm-grid">${[1,2,3,4].map(b=>`
+        <div class="beat-box" id="beat${b}" onclick="tapBeat(${b})">♩</div>`).join('')}</div>
+        <div class="key-instruction" id="beatInstr">Tap 1 → 2 → 3 → 4 in order!</div>`;
+
+    case 'staff_display':
+    case 'staff_match':
+      return `<div class="staff-wrap">
+        <svg class="staff-svg" width="320" height="100" viewBox="0 0 320 100">
+          ${[20,35,50,65,80].map(y=>`<line x1="10" y1="${y}" x2="310" y2="${y}" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>`).join('')}
+          <text x="14" y="88" font-size="72" fill="rgba(255,255,255,0.8)">𝄞</text>
+          <ellipse cx="180" cy="50" rx="12" ry="9" fill="#FFD700" transform="rotate(-15,180,50)"/>
+          <text x="158" y="22" font-size="12" fill="#FFD700" font-family="Baloo 2,cursive" font-weight="800">E</text>
+          <text x="155" y="95" font-size="11" fill="rgba(255,255,255,0.4)" font-family="Baloo 2,cursive">Middle E</text>
+        </svg>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:8px">Notes sit on lines or in spaces — higher position = higher sound!</div>
+      </div>` + pianoHTML(true);
+
+    case 'colour_match_lesson':
+      const randNote = NOTES_DEF[Math.floor(Math.random()*7)];
+      const ni = NOTES_DEF.indexOf(randNote);
+      return `<div style="text-align:center">
+        <div style="width:100px;height:100px;border-radius:20px;background:${COLORS[ni]};margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:3rem;box-shadow:0 8px 30px rgba(0,0,0,0.4)">${EMOJIS[ni]}</div>
+        <div style="font-family:'Baloo 2',cursive;color:var(--gold);margin-bottom:12px">Press the matching key!</div>
+      </div>` + pianoHTML(true);
+
+    default:
+      return pianoHTML(true);
+  }
+}
+
+let beatSeq = 1;
+function tapBeat(n) {
+  const box = document.getElementById('beat'+n);
+  if (n === beatSeq) {
+    box.classList.add('active');
+    playNote(['C4','E4','G4','C5'][n-1], 0.4);
+    beatSeq++;
+    if (beatSeq > 4) {
+      document.getElementById('beatInstr').textContent = '🎉 Perfect rhythm! You did it!';
+      setTimeout(() => { beatSeq=1; document.querySelectorAll('.beat-box').forEach(b=>b.classList.remove('active')); }, 1200);
+    }
+  } else {
+    box.style.borderColor='#FF4757';
+    setTimeout(()=>box.style.borderColor='',500);
+  }
+}
+
+let fingerTarget = 1;
+function fingerTap(num, name) {
+  const fb = document.getElementById('fingerFb');
+  if (!fb) {
+    setBubble(`Finger ${num} — ${name}! ✋`);
+    return;
+  }
+  if (parseInt(num) === fingerTarget) {
+    fb.textContent = `✅ Correct! That's finger ${num} — ${name}!`;
+    fb.style.color = '#2ED573';
+    fingerTarget++;
+    const task = document.getElementById('fingerTask');
+    if (task && fingerTarget <= 5) task.innerHTML = `Tap finger <strong>${fingerTarget}</strong>!`;
+    if (fingerTarget > 5) { if(task) task.textContent = '🎉 Amazing! You know all 5 fingers!'; fingerTarget=1; }
+  } else {
+    fb.textContent = `❌ That's finger ${num}. Try finger ${fingerTarget}!`;
+    fb.style.color = '#FF4757';
+  }
+  fb.style.animation='none'; fb.offsetWidth; fb.style.animation='fbPop 0.4s ease';
+}
+
+function attachLessonPiano() {
+  document.querySelectorAll('#lpKeys .lp-wk, #lpKeys .lp-bk').forEach(k => {
+    k.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      const note = k.dataset.note;
+      const idx  = parseInt(k.dataset.idx ?? '-1');
+      k.classList.add('lplit');
+      setTimeout(()=>k.classList.remove('lplit'),240);
+      playNote(note, 0.8);
+      spawnFloatFromEl(k);
+      addScore(3);
+      setBubble(bubblePhrases[Math.floor(Math.random()*bubblePhrases.length)]);
+    });
+  });
+}
+
+function spawnFloatFromEl(el) {
+  const r = el.getBoundingClientRect();
+  const fn = document.createElement('div');
+  fn.className = 'fnote';
+  fn.textContent = FNOTES[Math.floor(Math.random()*FNOTES.length)];
+  fn.style.left = (r.left + r.width/2 - 16) + 'px';
+  fn.style.top  = (r.top - 10) + 'px';
+  document.body.appendChild(fn);
+  setTimeout(() => fn.remove(), 1700);
+}
+
+function answerQuiz(chosen, correct) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach((o,i) => {
+    if (i === correct) o.classList.add('correct');
+    else if (i === chosen) o.classList.add('wrong');
+    o.style.cursor = 'default';
+  });
+  const fb = document.getElementById('quizFb');
+  if (chosen === correct) {
+    fb.textContent = '✅ Correct! Well done! 🌟';
+    fb.style.color = '#2ED573';
+    addScore(25);
+    confetti();
+  } else {
+    fb.textContent = `❌ Not quite! The answer was: ${document.querySelectorAll('.quiz-opt')[correct].textContent}`;
+    fb.style.color = '#FF4757';
+  }
+  fb.style.animation='none'; fb.offsetWidth; fb.style.animation='fbPop 0.4s ease';
+  buildLessonNav(currentLesson.lesson.steps.length);
+}
+
+function buildLessonNav(total) {
+  const nav = document.getElementById('lessonNav');
+  const step = currentLesson.lesson.steps[currentStep];
+  const isLast = currentStep === total - 1;
+  const isQuiz = step.type === 'quiz';
+
+  let html = '';
+  if (currentStep > 0) html += `<button class="lnav-btn lnav-prev" onclick="lessonGo(-1)">← Back</button>`;
+
+  if (isLast) {
+    if (!isQuiz || quizAnswered) {
+      html += `<button class="lnav-btn lnav-done" onclick="completeLesson()">🏆 Complete Lesson!</button>`;
+    }
+  } else {
+    if (!isQuiz || quizAnswered) {
+      html += `<button class="lnav-btn lnav-next" onclick="lessonGo(1)">Next Step →</button>`;
+    }
+  }
+
+  nav.innerHTML = html;
+}
+
+function lessonGo(dir) {
+  currentStep += dir;
+  quizAnswered = false;
+  renderLessonStep();
+  document.getElementById('lessonOverlay').scrollTo({top:0,behavior:'smooth'});
+}
+
+function completeLesson() {
+  const { lesson, level } = currentLesson;
+  lessonProgress[lesson.id] = true;
+  addScore(100);
+  confetti();
+  showBanner(`🏆 Lesson Complete! "${lesson.title}" ✅ +100 pts!`, 4000);
+  setBubble('You finished the lesson! You are a champion! 🦁🌟');
+
+  // Check badges
+  const totalDone = Object.keys(lessonProgress).length;
+  if (totalDone >= 1)  unlockBadge(1);
+  if (totalDone >= 4)  unlockBadge(3);
+  if (totalDone >= 9)  unlockBadge(6);
+  if (totalDone >= 12) unlockBadge(4);
+
+  closeLessonViewer();
+}
+buildSongPicker();
+renderSheet();
+buildBadges();
+
+setTimeout(() => showBanner('👋 Welcome to PianoNaija! Tap a key to start! 🎹'), 800);
+
+// Rotate mascot bubble every 6s
+setInterval(() => {
+  const phrases = [
+    'Touch the piano keys! 🎹','Which song shall we play? 🎵',
+    'You dey do well! Keep playing! 💪','Practice every day and you go be a star! ⭐',
+    'Try the activities! They are so fun! 🎮','Every musician started as a beginner! 🌟',
+    'Oya! One more song! 🇳🇬'
+  ];
+  setBubble(phrases[Math.floor(Math.random()*phrases.length)]);
+}, 6000);
+</script>
+</body>
+</html>
